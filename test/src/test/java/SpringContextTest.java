@@ -14,6 +14,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @ContextConfiguration(
         classes = {Config.class})
 
+
 public class SpringContextTest {
     @Test
     public void whenSpringContextIsInstantiated_thenNoExceptions() {

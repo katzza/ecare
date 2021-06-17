@@ -35,6 +35,8 @@ public class TariffService {
     OptionDAO optionDAO;
     @Autowired
     TariffOptionsDAO tariffOptionsDAO;
+    @Autowired
+    HotTariffService hotTariffService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -100,6 +102,7 @@ public class TariffService {
             }
         }
         tariffDAO.update(tariff);
+        hotTariffService.sendMessage();
         return Optional.empty();
     }
 
@@ -170,6 +173,7 @@ public class TariffService {
             setMainTariffOption(newTravelOptionId, tariff);
         }
         tariffDAO.update(tariff);
+        hotTariffService.sendMessage();
         return Optional.empty();
     }
 

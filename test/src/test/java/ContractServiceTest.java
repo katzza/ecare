@@ -8,20 +8,14 @@ import com.ecare.dto.NumberDto;
 import com.ecare.services.ClientService;
 import com.ecare.services.ContractService;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Before;
-import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Thread.sleep;
-import static org.mockito.Mockito.*;
 
 @Slf4j
 /*@RunWith(SpringJUnit4ClassRunner.class)

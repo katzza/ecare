@@ -7,7 +7,6 @@ import com.ecare.domain.UserEntity;
 import com.ecare.domain.UserRole;
 import com.ecare.dto.UserDto;
 import com.ecare.error.UserAlreadyExistException;
-import com.ecare.error.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
