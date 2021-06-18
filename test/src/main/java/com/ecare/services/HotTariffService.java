@@ -18,7 +18,7 @@ public class HotTariffService {
     TariffDAO tariffDAO;
 
     public void sendMessage() {
-        messageSender.sendMessage("{Tariff [id=" + 1 + ", name=" + "name" + ", price=" + "50" +"]}"
+        messageSender.sendMessage("[{\"name\":\"HotBlue\",\"price\":1000},{\"name\":\"HotBlack\",\"price\":500},{\"name\":\"HotRed\",\"price\":600}]"
         // messageSender.sendMessage(build(tariff));
         );
     }

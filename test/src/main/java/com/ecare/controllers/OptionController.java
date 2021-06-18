@@ -33,16 +33,14 @@ public class OptionController {
             model.addAttribute("message", error.get());
             return "employee/newoption";
         }
-        return "redirect: /employee/options";
+        return "redirect:/employee/options";
     }
 
     @GetMapping("/updateoption")
     public String updateOption(@RequestParam("optionId") int optionId, Model model) {
         OptionDto optionDto = optionService.findById(optionId);
         optionService.showBaseOptions(optionDto);
-        //    optionService.showAdditionalOptions(optionDto);
-        //     optionService.showOptionsOptions(optionDto);
-        model.addAttribute("option", optionDto);
+         model.addAttribute("option", optionDto);
         return "employee/updateoption";
     }
 
@@ -53,19 +51,8 @@ public class OptionController {
             model.addAttribute("message", error.get());
             return "employee/updateoption";
         }
-        model.addAttribute("message", "Option was successfully changed");
-        return "redirect: /employee/options";
+      /*  model.addAttribute("message", "Option was successfully changed");*/
+        return "redirect:/employee/options";
     }
-
-  /*  @RequestMapping("/deleteadditionaloption") //old logic
-    public String deleteAdditionalOption(@RequestParam("optionId") int optionId, @RequestParam("addoptionId") int addoptionId, Model model) {
-        OptionDto optionDto = optionService.findById(optionId);
-        optionService.deleteAdditionalOption(optionId, addoptionId);
-        optionService.showBaseOptions(optionDto);
-        optionService.showAdditionalOptions(optionDto);
-        optionService.showOptionsOptions(optionDto);
-        model.addAttribute("optionId", optionDto.getOptionId());
-        return "redirect:/option/updateoption";
-    }*/
 
 }

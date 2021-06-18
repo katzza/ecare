@@ -11,8 +11,9 @@
         <link rel="stylesheet" href="resources/style.css" type="text/css"/>
     </h:head>
     <h:body>
-        <div class="jumbotron text-center">
-            <h1><!--<h:graphicImage value="resources/pink_flame.jpg" class="img-valign"/>-->Choose your hot tariff!</h1>
+        <h2>Hot Tariffs:</h2>
+     <!--   <div class="jumbotron text-center">
+            <h1>&lt;!&ndash;<h:graphicImage value="resources/pink_flame.jpg" class="img-valign"/>&ndash;&gt;Choose your hot tariff!</h1>
 
         </div>
 
@@ -26,36 +27,14 @@
                                 <div class="panel-heading text-center">#{tariff.name}</div>
                                 <div class="panel-heading text-center">#{tariff.description}</div>
                                 <div class="panel-heading text-center">#{tariff.price}</div>
-                             <!--   <div class="panel-footer">$#{tariff.price}</div>-->
+                             &lt;!&ndash;   <div class="panel-footer">$#{tariff.price}</div>&ndash;&gt;
                             </div>
                         </div>
                     </ui:repeat>
                 </div>
             </div>
-        </h:panelGroup>
-        <!-- <h:dataTable value = "#{listener.tariffs}" var = "tariff"
-                     id="tariffs">
-             <h:column>
-                 <f:facet name = "header">Name</f:facet>
-                 #{tariff.name}
-             </h:column>
-             <h:column>
-                 <f:facet name = "header">Department</f:facet>
-                 #{tariff.price}
-             </h:column>
-         </h:dataTable>-->
-        <!--     <table class="table my-0" id="tariffs">
-             <tr>
-                 <th align="center">Name</th>
-                 <th align="center">Price</th>
-             </tr>
-             <c:forEach items="#{listener.tariffs}" var="tariff" varStatus="loop">
-                 <tr id="color#{loop.index}">
-                     <td align="center">#{tariff.name}</td>
-                     <td align="center">#{tariff.name}</td>
-                 </tr>
-             </c:forEach>
-             </table>-->
+        </h:panelGroup> -->
+
         <h:form>
             <f:websocket channel="websocket">
                 <f:ajax event="update" render=":tariffs"/>
