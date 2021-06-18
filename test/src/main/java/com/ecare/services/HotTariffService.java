@@ -24,7 +24,7 @@ public class HotTariffService {
     }
 
     private String build() {
-        List<TariffEntity> hotTariffs = tariffDAO.getTariffByTariffId(1);
+        List<TariffEntity> hotTariffs = tariffDAO.getChampionTariffs();
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         return gson.toJson(hotTariffs);
     }

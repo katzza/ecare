@@ -11,29 +11,27 @@
         <link rel="stylesheet" href="resources/style.css" type="text/css"/>
     </h:head>
     <h:body>
-        <h2>Hot Tariffs:</h2>
-     <!--   <div class="jumbotron text-center">
-            <h1>&lt;!&ndash;<h:graphicImage value="resources/pink_flame.jpg" class="img-valign"/>&ndash;&gt;Choose your hot tariff!</h1>
+        <div class="jumbotron text-center">
+            <h1><!--<h:graphicImage value="resources/pink_flame.jpg" class="img-valign"/>-->Choose your new hot tariff</h1>
 
         </div>
 
         <h:panelGroup id="tariffs" rendered="true">
             <div class="container">
                 <div class="row text-center">
-                    <h2>Hot Tariffs:</h2>
                     <ui:repeat value="#{webSocket.tariffs}" var="tariff">
                         <div class="col-sm-4">
                             <div class="panel panel-info">
                                 <div class="panel-heading text-center">#{tariff.name}</div>
                                 <div class="panel-heading text-center">#{tariff.description}</div>
                                 <div class="panel-heading text-center">#{tariff.price}</div>
-                             &lt;!&ndash;   <div class="panel-footer">$#{tariff.price}</div>&ndash;&gt;
+                                <!--   <div class="panel-footer">$#{tariff.price}</div>-->
                             </div>
                         </div>
                     </ui:repeat>
                 </div>
             </div>
-        </h:panelGroup> -->
+        </h:panelGroup>
 
         <h:form>
             <f:websocket channel="websocket">

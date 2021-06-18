@@ -55,7 +55,7 @@ public class TariffController {
 
     @GetMapping("/updatetariff")
     public String updateTariff(@RequestParam("tariffId") int tariffId, Model model) {
-        TariffDto tariff = tariffService.findById(tariffId);
+        TariffDto tariff = tariffService.findById(tariffId); //todo to service to one method
 
         tariffService.showUniqueCallsOptions(tariff);
         tariffService.showUniqueTravelOptions(tariff);

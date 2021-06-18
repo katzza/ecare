@@ -21,7 +21,7 @@ public class ClientService {
     @Autowired
     ClientDAO clientDAO;
     @Autowired
-    ContractService contractService;
+    ContractFacade contractFacade;
     @Autowired
     UserService userService;
 
@@ -54,23 +54,23 @@ public class ClientService {
 
     @Transactional
     public ClientDto findClientByUserEmail(String email) {
-        List<ClientEntity> clientByUserEmail = clientDAO.findClientByUserEmail(email);
-        if (clientByUserEmail.size() == 0) {
-            throw new UserNotFoundException("There is no client with that email: "
-                    + email);
-        } else {
-            ClientDto client = convertToDto(clientByUserEmail.get(0));
-          /*  List<ContractDto> contracts = contractService.getContractsByClientId(client.getClientId());
-            client.setClientContracts(contracts);*/
-            log.info(client.toString());
-            return client;
-        }
+        return clientDAO.findClientByUserEmail(email).stream()     //todo rewrite methods
+                .findFirst()
+                .map(this::getClientDto)
+                .orElseThrow(() -> new UserNotFoundException("There is no client with that email:" + email));
+
     }
+
+    private ClientDto getClientDto(ClientEntity client) {
+        log.info(client.toString());
+        return convertToDto(client);
+    }
+
 
     @Transactional
     public ClientDto findByPhone(String phoneNumber) {
         List<ClientEntity> clientByPhoneNumber = clientDAO.findClientByPhone(phoneNumber);
-        if (clientByPhoneNumber.size() == 0) {
+        if (clientByPhoneNumber.isEmpty()) {
             throw new UserNotFoundException("There is no client with that phone number: "
                     + phoneNumber);
         } else {
@@ -104,6 +104,12 @@ public class ClientService {
 
     private ClientEntity convertToEntity(ClientDto clientDto) {
         return modelMapper.map(clientDto, ClientEntity.class);
+    }
+
+
+    public void createClient(UserEntity userEntity) {
+        ClientEntity clientEntity = new ClientEntity(userEntity);
+        clientDAO.save(clientEntity);
     }
 
 }

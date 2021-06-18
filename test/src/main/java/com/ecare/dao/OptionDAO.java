@@ -53,14 +53,6 @@ public class OptionDAO extends AbstractHibernateDAO {
                 .getResultList();
     }
 
-
-
-/*    public List<Object[]> getUnselectedAdditionalOptions(int optionId) {
-        return getCurrentSession().createNamedQuery("Option.getUnselectedAdditionalOptions", Object[].class)
-                .setParameter("main_option_id", optionId)
-                .getResultList();
-    }*/ //old logic
-
     public List<OptionEntity> findByMainOptionId(int optionId) {
         return getCurrentSession().createNamedQuery("Option.getOptionsByMainOptionId", OptionEntity.class)
                 .setParameter("main_option_id", optionId)

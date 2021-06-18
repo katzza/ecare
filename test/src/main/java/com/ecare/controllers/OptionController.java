@@ -21,7 +21,6 @@ public class OptionController {
     public String createNewOption(Model model) {
         OptionDto optionDto = new OptionDto();
         optionService.showBaseOptions(optionDto);
-        // optionService.showAdditionalOptions(optionDto);
         model.addAttribute("option", optionDto);
         return "employee/newoption";
     }

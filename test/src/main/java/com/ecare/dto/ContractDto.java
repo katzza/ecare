@@ -12,7 +12,6 @@ public class ContractDto {
     private int contractId;
     private TariffDto tariffId;
     private NumberDto phoneNumber;
-   // private String phoneNumber;
     private boolean blockedByUser = false;
     private boolean blockedByCompany;
     private List<OptionDto> contractAddedOptions;

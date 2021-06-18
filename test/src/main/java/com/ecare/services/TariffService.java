@@ -28,7 +28,7 @@ public class TariffService {
     @Autowired
     ContractDAO contractDAO;
     @Autowired
-    ContractService contractService;
+    ContractFacade contractFacade;
     @Autowired
     OptionService optionService;
     @Autowired
@@ -195,7 +195,7 @@ public class TariffService {
 
     private void deleteTariffsOptionsByMainOptionDeletion(int tariffId, int baseOptionId) {
         List<OptionDto> optionsToDeleteFromTariff = optionService.getMultiOptionsByBaseAndTariffId(baseOptionId, tariffId);
-        if (optionsToDeleteFromTariff != null)
+        if (!optionsToDeleteFromTariff.isEmpty())
             for (OptionDto option : optionsToDeleteFromTariff) {
                 tariffOptionsDAO.delete(tariffId, option.getOptionId());
             }
@@ -215,7 +215,7 @@ public class TariffService {
                     " is the base object, or the base object has not been assigned yet. " +
                     "Please assign a new base object first!");
         } else {
-            List<ContractEntity> contracts = contractService.getContractsByTariffId(tariffId);
+            List<ContractEntity> contracts = contractFacade.getContractsByTariffId(tariffId);
             if (contracts.size() > 0) {
                 for (ContractEntity contract : contracts) {
                     contract.setTariffByTariffId(baseTariff.get(0));
@@ -315,7 +315,7 @@ public class TariffService {
 
     public void showTariffAddedMultiFreeOptions(TariffDto tariff) {
         List<OptionDto> tariffAddedMultiAndFreeoptions = optionService.showTariffAddedMultiOptions(tariff.getTariffId());
-        if (tariffAddedMultiAndFreeoptions != null) {
+        if (!tariffAddedMultiAndFreeoptions.isEmpty()) {
             tariff.setMultipleOptionDtos(tariffAddedMultiAndFreeoptions);
         }
     }

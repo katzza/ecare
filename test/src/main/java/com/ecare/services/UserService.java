@@ -27,7 +27,10 @@ public class UserService {
     UserDAO userDAO;
 
     @Autowired
-    ClientDAO clientDAO;
+    ClientDAO clientDAO; //todo clientService
+
+    @Autowired
+    ClientService clientService;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -47,17 +50,19 @@ public class UserService {
             UserEntity userEntity = convertToEntity(user);
             userEntity.setRole(UserRole.ROLE_CLIENT);
             userDAO.save(userEntity);
-            ClientEntity clientEntity = new ClientEntity(userEntity);
-            clientDAO.save(clientEntity);
+            clientService.createClient(userEntity);
         }
     }
+
 
     @Transactional
     public UserDto findByEmail(String email) {
         List<UserEntity> userEntity = userDAO.findByEmail(email);
         if (userEntity.size() == 0) {
             throw new UsernameNotFoundException("User not found by name: " + email);
-        } else return convertToDto(userEntity.get(0));
+        } else {
+            return convertToDto(userEntity.get(0));
+        }
 
     }
 

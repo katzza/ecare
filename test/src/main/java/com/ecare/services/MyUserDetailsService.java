@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -41,9 +42,9 @@ public class MyUserDetailsService implements UserDetailsService {
         }
     }
 
-    private org.springframework.security.core.userdetails.User buildUserForAuthentication(UserEntity
-                                                                                                  user, List<GrantedAuthority> authorities) {
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
+    private User buildUserForAuthentication(UserEntity
+                                                    user, List<GrantedAuthority> authorities) {
+        return new User(user.getEmail(), user.getPassword(), authorities);
     }
 
     private List<GrantedAuthority> buildUserAuthority(Set<UserRole> userRoles) {
@@ -54,7 +55,7 @@ public class MyUserDetailsService implements UserDetailsService {
         return new ArrayList<>(setAuths);
     }
 
-    @ExceptionHandler(UsernameNotFoundException.class)
+    @ExceptionHandler(UsernameNotFoundException.class) //todo move to controller
     public String handleException() {
         return "/error/usernotfound";
     }

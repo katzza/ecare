@@ -6,7 +6,7 @@ import com.ecare.domain.*;
 import com.ecare.dto.ContractDto;
 import com.ecare.dto.NumberDto;
 import com.ecare.services.ClientService;
-import com.ecare.services.ContractService;
+import com.ecare.services.ContractFacade;
 import lombok.extern.slf4j.Slf4j;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -39,7 +39,7 @@ public class ContractServiceTest {
     ModelMapper modelMapper;
 
     @InjectMocks
-    private ContractService contractService;
+    private ContractFacade contractFacade;
     private List<NumberDto> numberList = new ArrayList<>();
     private List<ContractDto> dtoList = new ArrayList<>();
     private List<ContractEntity> entityList = new ArrayList<>();

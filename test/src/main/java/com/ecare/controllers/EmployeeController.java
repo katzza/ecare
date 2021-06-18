@@ -2,16 +2,12 @@ package com.ecare.controllers;
 
 import com.ecare.dto.ClientDto;
 import com.ecare.dto.OptionDto;
-import com.ecare.dto.TariffDto;
-import com.ecare.services.*;
-import com.ecare.dto.UserDto;
 import com.ecare.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -19,15 +15,13 @@ import java.util.List;
 public class EmployeeController {
 
     @Autowired
-    private UserService userService;
-    @Autowired
     private ClientService clientService;
     @Autowired
-    ContractService contractService;
+    private ContractFacade contractFacade;
     @Autowired
-    TariffService tariffService;
+    private TariffService tariffService;
     @Autowired
-    OptionService optionService;
+    private OptionService optionService;
 
 
     @RequestMapping("/users")
@@ -106,14 +100,14 @@ public class EmployeeController {
 
     @GetMapping("/block")
     public String blockContractByCompany(@RequestParam("contractId") int id, Model model) {
-        int clientId = contractService.blockContractByCompany(id);
+        int clientId = contractFacade.blockContractByCompany(id);
         return getClientInfoPage(model, clientId);
     }
 
 
     @GetMapping("/unblock")
     public String unblockContract(@RequestParam("contractId") int id, Model model) {
-        int clientId = contractService.unblockContractByCompany(id);
+        int clientId = contractFacade.unblockContractByCompany(id);
         return getClientInfoPage(model, clientId);
     }
 

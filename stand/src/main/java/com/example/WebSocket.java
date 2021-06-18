@@ -43,7 +43,7 @@ public class WebSocket {
     }
 
     @PostConstruct
-    public void askData() {
+    public void onStartUp() {
         try {
             URL url = new URL(URI);
             HttpURLConnection connection = (HttpURLConnection) (url.openConnection());

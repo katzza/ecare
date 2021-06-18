@@ -1,7 +1,6 @@
 package com.ecare.services;
 
 import com.ecare.dao.OptionDAO;
-import com.ecare.dao.OptionOptionsDAO;
 import com.ecare.domain.OptionEntity;
 import com.ecare.dto.OptionDto;
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +22,6 @@ public class OptionService {
     @Autowired
     OptionDAO optionDAO;
     @Autowired
-    OptionOptionsDAO optionOptionsDAO;
-    @Autowired
     private ModelMapper modelMapper;
 
     public List<OptionDto> getAllOptions() {
@@ -34,17 +31,17 @@ public class OptionService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<String> saveOption(OptionDto optionDto) {
+    public Optional<String> saveOption(OptionDto optionDto) {  //todo: save - return object or Id, error - exception
         if (optionDAO.findByName(optionDto.getOptionName()).size() > 0) {
-            log.info("Option " + optionDto.getOptionName() + " already exist");
-            return Optional.of("Option " + optionDto.getOptionName() + " already exist");
+            log.info("Option {} already exist", optionDto.getOptionName());
+            return Optional.of("Option " + optionDto.getOptionName() + " already exist"); //String format of
         }
         OptionEntity option = convertToEntity(optionDto);
         optionDAO.save(option);
         return Optional.empty();
     }
 
-    public Optional<String> updateOption(OptionDto optionDto) {
+    public Optional<String> updateOption(OptionDto optionDto) { //todo: update - return object or Id, error - exception
         OptionEntity option = (OptionEntity) optionDAO.findById(optionDto.getOptionId());
         option.setOptionName(optionDto.getOptionName());
         option.setDescription(optionDto.getDescription());
@@ -73,7 +70,7 @@ public class OptionService {
     }
 
     public OptionDto getMainOptionByBaseAndTariffId(int baseOptionId, int tariffId) {
-        log.info("getUniqueOptionByBaseAndTariffId(baseOptionId, tariffId) " + baseOptionId, tariffId);
+        log.info("getUniqueOptionByBaseAndTariffId(baseOptionId, tariffId) " + baseOptionId, tariffId); //todo {}
         List<OptionEntity> option = optionDAO.getByBaseIsMultuAndTariffId(baseOptionId, false, tariffId);
         if (option.size() > 0) {
             return convertToDto(option.get(0));
@@ -94,16 +91,10 @@ public class OptionService {
     }
 
     private List<OptionDto> getOptionDtos(List<OptionEntity> options) {
-        if (options.size() > 0) {
-            List<OptionDto> optionDtos = new ArrayList<>();
-            for (OptionEntity option :
-                    options) {
-                optionDtos.add(convertToDto(option));
-            }
-            return optionDtos;
-        } else
-            log.info("return null");
-        return null;
+        return options.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+
     }
 
     private OptionDto convertToDto(OptionEntity optionEntity) {
