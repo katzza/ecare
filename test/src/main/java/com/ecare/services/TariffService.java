@@ -5,6 +5,7 @@ import com.ecare.dao.OptionDAO;
 import com.ecare.dao.TariffDAO;
 import com.ecare.dao.TariffOptionsDAO;
 import com.ecare.domain.*;
+import com.ecare.dto.HotTariffDto;
 import com.ecare.dto.OptionDto;
 import com.ecare.dto.TariffDto;
 import com.ecare.error.BaseObjectDeletionException;
@@ -45,11 +46,10 @@ public class TariffService {
         List<TariffEntity> tariffEntitys = tariffDAO.findAll();
         List<TariffDto> tariffs = tariffEntitys.stream().map(this::convertToDto)
                 .collect(Collectors.toList());
-        for (TariffDto tariff :
+        for (TariffDto tariff :    //todo rewrite
                 tariffs) {
             showTariffAddedMultiFreeOptions(tariff);
         }
-
         return tariffs;
     }
 
@@ -210,10 +210,9 @@ public class TariffService {
         TariffEntity tarifftoDelete = (TariffEntity) tariffDAO.findById(tariffId);
         List<TariffEntity> baseTariff = tariffDAO.getBaseTariff();
         if (tarifftoDelete.isBaseTariff() || baseTariff.size() == 0) {
-            throw new BaseObjectDeletionException("The object you are trying to delete" +
-                    ": " + tarifftoDelete.getTariffName() +
-                    " is the base object, or the base object has not been assigned yet. " +
-                    "Please assign a new base object first!");
+            throw new BaseObjectDeletionException
+                    (String.format("The object you are trying to delete: %s is the base object, or the base object has not been assigned yet. " +
+                            "Please assign a new base object first!", tarifftoDelete.getTariffName()));
         } else {
             List<ContractEntity> contracts = contractFacade.getContractsByTariffId(tariffId);
             if (contracts.size() > 0) {
@@ -333,4 +332,17 @@ public class TariffService {
     }
 
 
+    public List<HotTariffDto> getChampionTariffs() {
+        List<TariffEntity> tariffs = tariffDAO.getChampionTariffs();
+        return tariffs.stream().map(this::convertToHotTariffDto)
+                .collect(Collectors.toList());
+    }
+
+    private HotTariffDto convertToHotTariffDto(TariffEntity tariffEntity) {
+        HotTariffDto hotTariff = new HotTariffDto();
+        hotTariff.setTariffName(tariffEntity.getTariffName());
+        hotTariff.setTariffDescription(tariffEntity.getTariffDescription());
+        hotTariff.setPrice(tariffEntity.getPrice());
+        return hotTariff;
+    }
 }

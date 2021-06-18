@@ -6,7 +6,9 @@ import com.ecare.domain.TariffEntity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Assert;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -25,8 +27,6 @@ import java.util.List;
 @Transactional
 public class TariffToJsonTest {
 
-    @Autowired
-    TariffDAO tariffDAO;
 
     @Test
     public void tariffsToJsonTest() {
@@ -34,9 +34,14 @@ public class TariffToJsonTest {
         t1.setTariffName("test1");
         t1.setTariffDescription("test1 desc");
         t1.setPrice(500);
+        TariffEntity t2 = new TariffEntity();
+        t2.setTariffName("test2");
+        t2.setTariffDescription("test2 desc");
+        t2.setPrice(666);
         List<TariffEntity> hotTariffs = new ArrayList<>();
         hotTariffs.add(t1);
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        String jTariffs = gson.toJson(hotTariffs);
+        hotTariffs.add(t2);
+        String json = new Gson().toJson(hotTariffs);
+        Assertions.assertNotNull(json);
     }
 }

@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -34,7 +33,7 @@ public class OptionService {
     public Optional<String> saveOption(OptionDto optionDto) {  //todo: save - return object or Id, error - exception
         if (optionDAO.findByName(optionDto.getOptionName()).size() > 0) {
             log.info("Option {} already exist", optionDto.getOptionName());
-            return Optional.of("Option " + optionDto.getOptionName() + " already exist"); //String format of
+            return Optional.of(String.format("Option %s already exist", optionDto.getOptionName()));
         }
         OptionEntity option = convertToEntity(optionDto);
         optionDAO.save(option);
@@ -70,7 +69,7 @@ public class OptionService {
     }
 
     public OptionDto getMainOptionByBaseAndTariffId(int baseOptionId, int tariffId) {
-        log.info("getUniqueOptionByBaseAndTariffId(baseOptionId, tariffId) " + baseOptionId, tariffId); //todo {}
+        log.info("getUniqueOptionByBaseAndTariffId(baseOptionId, tariffId) {}, {} ", +baseOptionId, tariffId);
         List<OptionEntity> option = optionDAO.getByBaseIsMultuAndTariffId(baseOptionId, false, tariffId);
         if (option.size() > 0) {
             return convertToDto(option.get(0));
@@ -80,7 +79,7 @@ public class OptionService {
     }
 
     public List<OptionDto> getMultiOptionsByBaseAndTariffId(int baseOptionId, int tariffId) {
-        log.info("getMultiOptionsByBaseAndTariffId (baseOptionId, tariffId) " + baseOptionId, tariffId);
+        log.info("getMultiOptionsByBaseAndTariffId (baseOptionId, tariffId) {}, {}", baseOptionId, tariffId);
         List<OptionEntity> options = optionDAO.getByBaseIsMultuAndTariffId(baseOptionId, true, tariffId);
         return getOptionDtos(options);
     }

@@ -47,28 +47,26 @@ public class UserServiceTest {
 
     private UserEntity userEntity = new UserEntity();
     private UserDto userDto = new UserDto();
-    private ClientEntity client;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        publicUserDto();
+        configUserDto();
 
-        publicUserEntity();
+        configUserEntity();
 
-        client = new ClientEntity(userEntity);
         dtoList.add(userDto);
         entityList.add(userEntity);
     }
 
-    private void publicUserEntity() {
+    private void configUserEntity() {
         userEntity.setRole(UserRole.ROLE_CLIENT);
         userEntity.setEmail("test@tt.ee");
         userEntity.setPassword("$2a$10$KqaFxPq6a34ZfTou33B.bOUGuNdZxt5pAdU7HMNbxVcp9jYcS8T3C");
     }
 
-    private void publicUserDto() {
+    private void configUserDto() {
         userDto.setUserRole(UserRole.ROLE_CLIENT);
         userDto.setEmail("test@tt.ee");
         userDto.setPassword("321");

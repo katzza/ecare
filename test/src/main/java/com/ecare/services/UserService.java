@@ -2,7 +2,6 @@ package com.ecare.services;
 
 import com.ecare.dao.ClientDAO;
 import com.ecare.dao.UserDAO;
-import com.ecare.domain.ClientEntity;
 import com.ecare.domain.UserEntity;
 import com.ecare.domain.UserRole;
 import com.ecare.dto.UserDto;
@@ -43,8 +42,7 @@ public class UserService {
     public void saveUser(UserDto user) {
         if (userDAO.findByEmail(user.getEmail()).size() > 0) {
             log.info("Account-exist test NOK: There is an account with that email address");
-            throw new UserAlreadyExistException("There is an account with that email address: "
-                    + user.getEmail());
+            throw new UserAlreadyExistException(String.format("There is an account with that email address: %s", user.getEmail()));
         } else {
             log.info("Account-exist test is OK");
             UserEntity userEntity = convertToEntity(user);
@@ -70,7 +68,7 @@ public class UserService {
         try {
             request.login(username, password);
         } catch (ServletException e) {
-            System.out.println("Error while login " + e.getMessage());
+            log.info("Error while login {}", e.getMessage());
         }
     }
 
