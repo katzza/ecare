@@ -339,10 +339,12 @@ public class TariffService {
     }
 
     private HotTariffDto convertToHotTariffDto(TariffEntity tariffEntity) {
-        HotTariffDto hotTariff = new HotTariffDto();
+    /*    HotTariffDto hotTariff = new HotTariffDto(); //or map?!!
         hotTariff.setTariffName(tariffEntity.getTariffName());
         hotTariff.setTariffDescription(tariffEntity.getTariffDescription());
         hotTariff.setPrice(tariffEntity.getPrice());
-        return hotTariff;
+        return hotTariff;*/
+
+        return modelMapper.map(tariffEntity, HotTariffDto.class);
     }
 }
