@@ -21,7 +21,7 @@ import java.util.List;
         @NamedQuery(name = "Tariff.findByName",
                 query = "SELECT t FROM TariffEntity t where t.tariffName = :tariff_name"),
         @NamedQuery(name = "Tariff.findChampions",
-                query = "SELECT t.tariffName, t.tariffDescription, t.price FROM TariffEntity t WHERE UPPER(t.tariffName) LIKE '%CHAMPION'"),
+                query = "SELECT t FROM TariffEntity t WHERE UPPER(t.tariffName) LIKE '%CHAMPION'"),
         @NamedQuery(name = "Tariff.findBaseTariff",
                 query = "SELECT t FROM TariffEntity t where t.isBaseTariff = true"),
         @NamedQuery(name = "Tariff.getAllTariffs",
