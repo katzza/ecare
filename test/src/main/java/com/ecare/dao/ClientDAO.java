@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.NoResultException;
 import java.util.List;
-@Slf4j
+
 @Repository
 public class ClientDAO extends AbstractHibernateDAO {
     public ClientDAO() {
@@ -17,8 +17,6 @@ public class ClientDAO extends AbstractHibernateDAO {
 
 
     public List<ClientEntity> findClientByUserEmail(String email) {
-        log.info(getCurrentSession().createNamedQuery("Client.findByUserEmail", ClientEntity.class)
-                .setParameter("email", email).getQueryString());
         return getCurrentSession().createNamedQuery("Client.findByUserEmail", ClientEntity.class)
                 .setParameter("email", email)
                 .getResultList();

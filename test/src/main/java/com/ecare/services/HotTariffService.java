@@ -1,6 +1,7 @@
 package com.ecare.services;
 
 import com.ecare.dao.TariffDAO;
+import com.ecare.dto.HotTariffDto;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.ecare.domain.TariffEntity;
@@ -15,18 +16,17 @@ public class HotTariffService {
     @Autowired
     MessageSender messageSender;
     @Autowired
-    TariffDAO tariffDAO;
+    TariffService tariffService;
+
 
     public void sendMessage() {
-        messageSender.sendMessage("[{\"name\":\"HotBlue\",\"price\":1000},{\"name\":\"HotBlack\",\"price\":500},{\"name\":\"HotRed\",\"price\":600}]"
-        // messageSender.sendMessage(build(tariff));
-        );
+        //     messageSender.sendMessage("[{\"name\":\"HotBlue\",\"price\":1000},{\"name\":\"HotBlack\",\"price\":500},{\"name\":\"HotRed\",\"price\":600}]"
+        messageSender.sendMessage(build());
     }
 
     private String build() {
-        List<TariffEntity> hotTariffs = tariffDAO.getTariffByTariffId(1);
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        return gson.toJson(hotTariffs);
+        List<HotTariffDto> hotTariffs = tariffService.getChampionTariffs();
+        return new Gson().toJson(hotTariffs);
     }
 
     @PostConstruct

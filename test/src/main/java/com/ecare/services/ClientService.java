@@ -21,7 +21,7 @@ public class ClientService {
     @Autowired
     ClientDAO clientDAO;
     @Autowired
-    ContractService contractService;
+    ContractFacade contractFacade;
     @Autowired
     UserService userService;
 
@@ -36,9 +36,8 @@ public class ClientService {
     }
 
     @Transactional
-    public Optional<String> saveClient(ClientDto client) {
+    public void saveClient(ClientDto client) {
         clientDAO.save(convertToEntity(client));
-        return Optional.empty();
     }
 
     @Transactional
@@ -54,38 +53,31 @@ public class ClientService {
 
     @Transactional
     public ClientDto findClientByUserEmail(String email) {
-        List<ClientEntity> clientByUserEmail = clientDAO.findClientByUserEmail(email);
-        if (clientByUserEmail.size() == 0) {
-            throw new UserNotFoundException("There is no client with that email: "
-                    + email);
-        } else {
-            ClientDto client = convertToDto(clientByUserEmail.get(0));
-          /*  List<ContractDto> contracts = contractService.getContractsByClientId(client.getClientId());
-            client.setClientContracts(contracts);*/
-            log.info(client.toString());
-            return client;
-        }
+        return clientDAO.findClientByUserEmail(email).stream()     //todo rewrite methods
+                .findFirst()
+                .map(this::getClientDto)
+                .orElseThrow(() -> new UserNotFoundException("There is no client with that email:" + email));
     }
+
+    private ClientDto getClientDto(ClientEntity client) {
+        log.info(client.toString());
+        return convertToDto(client);
+    }
+
 
     @Transactional
     public ClientDto findByPhone(String phoneNumber) {
-        List<ClientEntity> clientByPhoneNumber = clientDAO.findClientByPhone(phoneNumber);
-        if (clientByPhoneNumber.size() == 0) {
-            throw new UserNotFoundException("There is no client with that phone number: "
-                    + phoneNumber);
-        } else {
-            ClientDto client = convertToDto(clientByPhoneNumber.get(0));
-            log.info(client.toString());
-            return client;
-        }
+        return clientDAO.findClientByPhone(phoneNumber).stream()
+                .findFirst()
+                .map(this::getClientDto)
+                .orElseThrow(() -> new UserNotFoundException("There is no client with that phone number:" + phoneNumber));
     }
 
     @Transactional
     public ClientDto findById(int id) {
         try {
             ClientEntity clientEntity = (ClientEntity) clientDAO.findById(id);
-            ClientDto client = convertToDto(clientEntity);
-            return client;
+            return convertToDto(clientEntity);
         } catch (UserNotFoundException ex) {
             ClientEntity client = new ClientEntity();
             return convertToDto(client);
@@ -93,17 +85,22 @@ public class ClientService {
     }
 
     private ClientDto convertToDto(ClientEntity clientEntity) {
-        ClientDto client = modelMapper.map(clientEntity, ClientDto.class);
-      /*  if (client.user == null) {
+        /*  if (client.user == null) {
             client.setUser(userService.convertToDto(clientEntity.getUser()));
         }*/
        /* List<ContractDto> contracts = contractService.getContractsByClientId(client.getClientId());
         client.setClientContracts(contracts);*/
-        return client;
+        return modelMapper.map(clientEntity, ClientDto.class);
     }
 
     private ClientEntity convertToEntity(ClientDto clientDto) {
         return modelMapper.map(clientDto, ClientEntity.class);
+    }
+
+
+    public void createClient(UserEntity userEntity) {
+        ClientEntity clientEntity = new ClientEntity(userEntity);
+        clientDAO.save(clientEntity);
     }
 
 }

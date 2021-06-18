@@ -3,7 +3,7 @@ package com.ecare.controllers;
 import com.ecare.dto.ClientDto;
 import com.ecare.dto.ContractDto;
 import com.ecare.services.ClientService;
-import com.ecare.services.ContractService;
+import com.ecare.services.ContractFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,29 +18,29 @@ import java.util.Optional;
 public class ContractController {
 
     @Autowired
-    ContractService contractService;
+    ContractFacade contractFacade;
     @Autowired
     private ClientService clientService;
 
     @GetMapping("/contract/newcontract")
     public String createContract(@RequestParam("clientId") int clientId, Model model) {
         ContractDto contractDto = new ContractDto();
-        contractService.generateFreeNumbers();
+        contractFacade.generateFreeNumbers();
         ClientDto client = clientService.findById(clientId);
         contractDto.setClientId(client.getClientId());
         contractDto.setClientEmail(client.getUser().getEmail());
         model.addAttribute("contract", contractDto);
-        contractService.showNumbers(contractDto);
-        contractService.showTariffandOptions(contractDto);
+        contractFacade.showNumbers(contractDto);
+        contractFacade.showTariffandOptions(contractDto);
         return "client/newcontract";
     }
 
     @PostMapping("/contract/newcontract")
     public String createContract(@ModelAttribute("contract") ContractDto contractDto, Model model) {
-        Optional<String> error = contractService.save(contractDto);
+        Optional<String> error = contractFacade.save(contractDto);
         if (error.isPresent()) {
             model.addAttribute("message", error.get());
-            contractService.showTariffandOptions(contractDto);
+            contractFacade.showTariffandOptions(contractDto);
             return "client/newcontract";
         }
         model.addAttribute("message", "New contract was successfully added");
@@ -50,13 +50,13 @@ public class ContractController {
 
     @GetMapping("/contract/editcontract")
     public String editContract(@RequestParam("contractId") int id, Model model) {
-        ContractDto contractDto = contractService.findById(id);
-        if (contractService.isBlocked(contractDto)) {
+        ContractDto contractDto = contractFacade.findById(id);
+        if (contractFacade.isBlocked(contractDto)) {
             model.addAttribute("message", "Contract " + contractDto.getPhoneNumber().getPhoneNumber() + " is blocked - it cannot be changed");
             model.addAttribute("client", clientService.findById(contractDto.getClientId()));
             return "client/clientinfo";
         }
-        contractService.showTariffandOptions(contractDto);
+        contractFacade.showTariffandOptions(contractDto);
         model.addAttribute("contract", contractDto);
         model.addAttribute("client", clientService.findByPhone(contractDto.getPhoneNumber().getPhoneNumber()));
         return "client/updatecontract";
@@ -64,7 +64,7 @@ public class ContractController {
 
     @PostMapping("/contract/editcontract")
     public String editContract(@ModelAttribute("contract") ContractDto contractDto, Model model) {
-        contractService.updateContract(contractDto);
+        contractFacade.updateContract(contractDto);
         model.addAttribute("message", "Contract " + contractDto.getPhoneNumber().getPhoneNumber() + " was successfully changed");
         model.addAttribute("client", clientService.findByPhone(contractDto.getPhoneNumber().getPhoneNumber()));
         return "client/clientinfo";
