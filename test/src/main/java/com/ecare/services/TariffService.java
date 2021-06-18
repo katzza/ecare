@@ -331,20 +331,4 @@ public class TariffService {
         return modelMapper.map(tariffDto, TariffEntity.class);
     }
 
-
-    public List<HotTariffDto> getChampionTariffs() {
-        List<TariffEntity> tariffs = tariffDAO.getChampionTariffs();
-        return tariffs.stream().map(this::convertToHotTariffDto)
-                .collect(Collectors.toList());
-    }
-
-    private HotTariffDto convertToHotTariffDto(TariffEntity tariffEntity) {
-    /*    HotTariffDto hotTariff = new HotTariffDto(); //or map?!!
-        hotTariff.setTariffName(tariffEntity.getTariffName());
-        hotTariff.setTariffDescription(tariffEntity.getTariffDescription());
-        hotTariff.setPrice(tariffEntity.getPrice());
-        return hotTariff;*/
-
-        return modelMapper.map(tariffEntity, HotTariffDto.class);
-    }
 }
