@@ -73,13 +73,16 @@ public class ClientService {
     }
 
     @Transactional
-    public ClientDto findById(int id) {
+    public ClientDto findById(int clientId) {
+        return convertToDto(findEntityById(clientId));
+    }
+
+    @Transactional
+    public ClientEntity findEntityById(int clientId) {
         try {
-            ClientEntity clientEntity = (ClientEntity) clientDAO.findById(id);
-            return convertToDto(clientEntity);
+            return (ClientEntity) clientDAO.findById(clientId);
         } catch (UserNotFoundException ex) {
-            ClientEntity client = new ClientEntity();
-            return convertToDto(client);
+            return new ClientEntity();
         }
     }
 

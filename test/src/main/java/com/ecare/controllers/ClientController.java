@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @RequiredArgsConstructor
 @Controller
 public class ClientController {
@@ -19,11 +20,7 @@ public class ClientController {
 
     @RequestMapping("tariffs")
     public String getAllTariffs(Model model) {
-        List<TariffDto> listTariffs = tariffService.getAllTariffs();
-        for (TariffDto tariff :
-                listTariffs) {
-            tariffService.showTariffAddedMultiFreeOptions(tariff);
-        }
+        List<TariffDto> listTariffs = tariffService.getTariffsShowMultioptions();
         model.addAttribute("tariffs", listTariffs);
         return "client/tariffs";
     }

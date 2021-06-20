@@ -22,19 +22,11 @@ public class ContractController {
     ContractFacade contractFacade;
     @Autowired
     private ClientService clientService;
-    @Autowired
-    private NumberService numberService;
 
     @GetMapping("/contract/newcontract")
     public String createContract(@RequestParam("clientId") int clientId, Model model) {
-        ContractDto contractDto = new ContractDto();
-        numberService.generateFreeNumbers();
-        ClientDto client = clientService.findById(clientId);
-        contractDto.setClientId(client.getClientId());
-        contractDto.setClientEmail(client.getUser().getEmail());
+        ContractDto contractDto = contractFacade.prepareNewContract(clientId);
         model.addAttribute("contract", contractDto);
-        numberService.putFreeNumbersToContractDto(contractDto);
-        contractFacade.showTariffandOptions(contractDto);
         return "client/newcontract";
     }
 

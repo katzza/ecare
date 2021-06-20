@@ -317,6 +317,15 @@ public class TariffService {
         }
     }
 
+
+    public List<TariffDto> getTariffsShowMultioptions() {
+        List<TariffDto> listTariffs = getAllTariffs();
+        for (TariffDto tariff : listTariffs) {
+            showTariffAddedMultiFreeOptions(tariff);
+        }
+        return listTariffs;
+    }
+
     public void deleteOptionFromTariff(int tariffId, int optionId) {
         tariffOptionsDAO.delete(tariffId, optionId);
     }

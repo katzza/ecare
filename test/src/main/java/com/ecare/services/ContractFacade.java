@@ -2,12 +2,12 @@ package com.ecare.services;
 
 import com.ecare.dao.ClientDAO;
 import com.ecare.dao.ContractDAO;
-import com.ecare.dao.NumberDAO;
 import com.ecare.dao.TariffDAO;
 import com.ecare.domain.ClientEntity;
 import com.ecare.domain.ContractEntity;
 import com.ecare.domain.NumberEntity;
 import com.ecare.domain.TariffEntity;
+import com.ecare.dto.ClientDto;
 import com.ecare.dto.ContractDto;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -15,11 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.LockModeType;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ThreadLocalRandom;
 
 
 @Slf4j
@@ -33,9 +31,7 @@ public class ContractFacade {
     @Autowired
     NumberService numberService;
     @Autowired
-    ClientDAO clientDAO; //todo move to Service
-    @Autowired
-    TariffDAO tariffDAO; //todo move to Service
+    TariffDAO tariffDAO;
     @Autowired
     ModelMapper modelMapper;
 
@@ -103,8 +99,7 @@ public class ContractFacade {
     @Transactional
     public Optional<String> save(ContractDto contractDto) {
         ContractEntity contract = new ContractEntity();
-      //  ClientEntity client = clientService.findById(contractDto.getClientId());
-        ClientEntity client = (ClientEntity) clientDAO.findById(contractDto.getClientId());
+        ClientEntity client = clientService.findEntityById(contractDto.getClientId());
         contract.setClientByClientId(client);
         TariffEntity tariff = (TariffEntity) tariffDAO.findById(contractDto.getTariffId().getTariffId());
         contract.setTariffByTariffId(tariff);
@@ -127,5 +122,16 @@ public class ContractFacade {
         return modelMapper.map(contractDto, ContractEntity.class);
     }
 
+
+    public ContractDto prepareNewContract(int clientId) {
+        ContractDto contractDto = new ContractDto();
+        numberService.generateFreeNumbers();
+        ClientDto client = clientService.findById(clientId);
+        contractDto.setClientId(client.getClientId());
+        contractDto.setClientEmail(client.getUser().getEmail());
+        numberService.putFreeNumbersToContractDto(contractDto);
+        showTariffandOptions(contractDto);
+        return contractDto;
+    }
 
 }

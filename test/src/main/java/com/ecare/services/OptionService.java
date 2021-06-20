@@ -109,4 +109,16 @@ public class OptionService {
         return modelMapper.map(optionDto, OptionEntity.class);
     }
 
+
+    public OptionDto getOptionDtoShowBaseOptions() {
+        OptionDto optionDto = new OptionDto();
+        showBaseOptions(optionDto);
+        return optionDto;
+    }
+
+    public OptionDto getOptionByIdShowBaseOptions(int optionId) {
+        OptionDto optionDto = findById(optionId);
+        showBaseOptions(optionDto);
+        return optionDto;
+    }
 }
