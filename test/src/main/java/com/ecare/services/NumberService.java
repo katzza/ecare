@@ -32,7 +32,7 @@ public class NumberService {
             for (int i = 0; i < freeNumbersSize; i++) {
                 int phoneNumber = random.nextInt(finishRandom) + startRandom;
                 NumberEntity newNumber = new NumberEntity(Integer.toString(phoneNumber));
-                if (numberDAO.findByPhone(Integer.parseInt(newNumber.getPhoneNumber())).isEmpty()) {
+                if (numberDAO.findByPhone(newNumber.getPhoneNumber()).isEmpty()) {
                     numberDAO.save(newNumber);
                 }
             }

@@ -103,6 +103,7 @@ public class ContractFacade {
     @Transactional
     public Optional<String> save(ContractDto contractDto) {
         ContractEntity contract = new ContractEntity();
+      //  ClientEntity client = clientService.findById(contractDto.getClientId());
         ClientEntity client = (ClientEntity) clientDAO.findById(contractDto.getClientId());
         contract.setClientByClientId(client);
         TariffEntity tariff = (TariffEntity) tariffDAO.findById(contractDto.getTariffId().getTariffId());

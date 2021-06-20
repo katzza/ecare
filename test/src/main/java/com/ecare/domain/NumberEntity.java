@@ -17,7 +17,7 @@ import java.io.Serializable;
                 query = "SELECT n.numberId, n.phoneNumber FROM NumberEntity n where n.isBooked = false"),
 
         @NamedQuery(name = "FreeNumber.findByPhone",
-                query = "SELECT n FROM NumberEntity n where n.phoneNumber = :phoneNumber"),
+                query = "SELECT n FROM NumberEntity n where n.phoneNumber = :phone_number"),
 })
 
 public class NumberEntity implements Serializable {
