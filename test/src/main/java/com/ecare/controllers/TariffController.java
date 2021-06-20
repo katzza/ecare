@@ -82,7 +82,7 @@ public class TariffController {
         //   public String setMultioptions(@ModelAttribute("tariff") TariffDto tariffDto, Model model, HttpSession session) {
         TariffDto tariff = tariffService.findById(tariffId);
         tariffService.showTariffAddedUniqueOptions(tariff);
-        tariffService.showMultipleOptions(tariff);
+        tariffService.showUnselectedMultiOptions(tariff);
         model.addAttribute("tariff", tariff);
         return "employee/setmultioptions";
     }

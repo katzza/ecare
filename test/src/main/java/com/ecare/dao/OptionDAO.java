@@ -33,6 +33,13 @@ public class OptionDAO extends AbstractHibernateDAO {
                 .getResultList();
     }
 
+    public List<Object[]> getNotTariffAddedMultioptions (int numberBaseOption, int tariffId) {
+        return getCurrentSession().createNamedQuery("Option.getNotTariffAddedMultioptions", Object[].class)
+                .setParameter("base_option", numberBaseOption)
+                .setParameter("tariff_id", tariffId)
+                .getResultList();
+    }
+
     public List<Object[]> getUnselectedFreeOptions(int tariffId) {
         return getCurrentSession().createNamedQuery("Option.getNotTariffAddedFreeOptions", Object[].class)
                 .setParameter("tariff_id", tariffId)

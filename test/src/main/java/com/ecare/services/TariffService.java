@@ -280,6 +280,22 @@ public class TariffService {
         mapOptions.put(" ", 0); //for empty
     }
 
+
+    public void showUnselectedMultiOptions(TariffDto tariffDto) {
+        int tariffId = tariffDto.getTariffId();
+        Map<String, Integer> mapOptions = tariffDto.getMultipleOptions();
+        if (tariffDto.getCallsOption() != null) {
+            optionDAO.getNotTariffAddedMultioptions(1, tariffId).forEach(array -> mapOptions.put((String) array[1], (Integer) array[0]));
+        }
+        if (tariffDto.getInternetOption() != null) {
+            optionDAO.getNotTariffAddedMultioptions(2, tariffId).forEach(array -> mapOptions.put((String) array[1], (Integer) array[0]));
+        }
+        if (tariffDto.getTravelOption() != null) {
+            optionDAO.getNotTariffAddedMultioptions(3, tariffId).forEach(array -> mapOptions.put((String) array[1], (Integer) array[0]));
+        }
+    }
+
+
     public Optional<String> setMultioptionsToTariff(TariffDto tariffDto) {
         //  TariffEntity tariff = (TariffEntity) tariffDAO.findByName(tariffDto.getTariffName());
         TariffEntity tariff = (TariffEntity) tariffDAO.findById(tariffDto.getTariffId());
