@@ -15,14 +15,16 @@ public class ContractDto {
     private boolean blockedByUser = false;
     private boolean blockedByCompany;
     private List<OptionDto> contractAddedOptions;
-    //    private ClientEntity clientByClientId; // many contracts by one Client
+
     private int clientId;
     private String clientEmail;
     private Map<String, Integer> tariffs = new HashMap<>();
     private Map<String, Integer> numbers = new HashMap<>();
+    private Map<String, Integer> contractOptions = new HashMap<>();
+    private List<Integer> selectedContractOptionIds;
 
   /*
     private TariffEntity tariffByTariffId; // many contracts by one Tariff
-    private List<ContractAddedOptionsEntity> contractAddedOptionsEntities = new ArrayList<>();*/
+    private List<ContractOptionsEntity> contractAddedOptionsEntities = new ArrayList<>();*/
 
 }

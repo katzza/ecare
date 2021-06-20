@@ -67,7 +67,7 @@ public class OptionEntity implements Serializable {
     private boolean isMulti;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "optionByOptionId")
-    private List<ContractAddedOptionsEntity> contractAddedOptionsEntities = new ArrayList<>();
+    private List<ContractOptionsEntity> contractAddedOptionsEntities = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "optionByOptionId")
     private List<TariffOptionsEntity> tariffOptionsEntities = new ArrayList<>();

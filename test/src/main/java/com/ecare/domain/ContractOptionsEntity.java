@@ -13,8 +13,14 @@ import java.io.Serializable;
 @Setter
 @Entity
 @NoArgsConstructor
+
+@NamedQueries({
+        @NamedQuery(name = "ContractOptions.findByContractIdOptionId",
+                query = "SELECT o FROM ContractOptionsEntity o " +
+                        "where o.contractByContractId.contractId = :contract_id and o.optionByOptionId.optionId =: option_id"),
+})
 @Table(name = "contract_added_options", schema = "public", catalog = "eCare")
-public class ContractAddedOptionsEntity implements Serializable {
+public class ContractOptionsEntity implements Serializable {
 
     @Id
     @JoinColumn(name = "contract_id")
@@ -26,7 +32,7 @@ public class ContractAddedOptionsEntity implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     private OptionEntity optionByOptionId;
 
-    public ContractAddedOptionsEntity(ContractEntity contractByContractId, OptionEntity optionByOptionId) {
+    public ContractOptionsEntity(ContractEntity contractByContractId, OptionEntity optionByOptionId) {
         this.contractByContractId = contractByContractId;
         this.optionByOptionId = optionByOptionId;
     }
