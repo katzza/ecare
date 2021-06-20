@@ -87,13 +87,13 @@ public class ClientService {
         }
     }
 
+    public void createClient(UserEntity userEntity) {
+        ClientEntity clientEntity = new ClientEntity(userEntity);
+        clientDAO.save(clientEntity);
+    }
+
     private ClientDto convertToDto(ClientEntity clientEntity) {
         ClientDto client = modelMapper.map(clientEntity, ClientDto.class);
-      /*  if (client.user == null) {
-            client.setUser(userService.convertToDto(clientEntity.getUser()));
-        }*/
-       /* List<ContractDto> contracts = contractService.getContractsByClientId(client.getClientId());
-        client.setClientContracts(contracts);*/
         return client;
     }
 
@@ -102,9 +102,5 @@ public class ClientService {
     }
 
 
-    public void createClient(UserEntity userEntity) {
-        ClientEntity clientEntity = new ClientEntity(userEntity);
-        clientDAO.save(clientEntity);
-    }
 
 }
