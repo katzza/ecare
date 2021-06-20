@@ -44,6 +44,6 @@ public class ContractEntity implements Serializable {
     private TariffEntity tariffByTariffId; // many contracts by one Tariff
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "contractByContractId")
-    private List<ContractAddedOptionsEntity> contractAddedOptionsEntities = new ArrayList<>();
+    private List<ContractOptionsEntity> contractAddedOptionsEntities = new ArrayList<>();
 
 }

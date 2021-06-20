@@ -32,6 +32,7 @@ public class ClientService {
         List<ClientEntity> clients = clientDAO.findAll();
         return clients.stream().map(this::convertToDto)
                 .collect(Collectors.toList());
+
     }
 
     @Transactional
@@ -73,23 +74,27 @@ public class ClientService {
     }
 
     @Transactional
-    public ClientDto findById(int id) {
+    public ClientDto findById(int clientId) {
+        return convertToDto(findEntityById(clientId));
+    }
+
+    @Transactional
+    public ClientEntity findEntityById(int clientId) {
         try {
-            ClientEntity clientEntity = (ClientEntity) clientDAO.findById(id);
-            return convertToDto(clientEntity);
+            return (ClientEntity) clientDAO.findById(clientId);
         } catch (UserNotFoundException ex) {
-            ClientEntity client = new ClientEntity();
-            return convertToDto(client);
+            return new ClientEntity();
         }
     }
 
+    public void createClient(UserEntity userEntity) {
+        ClientEntity clientEntity = new ClientEntity(userEntity);
+        clientDAO.save(clientEntity);
+    }
+
     private ClientDto convertToDto(ClientEntity clientEntity) {
-        /*  if (client.user == null) {
-            client.setUser(userService.convertToDto(clientEntity.getUser()));
-        }*/
-       /* List<ContractDto> contracts = contractService.getContractsByClientId(client.getClientId());
-        client.setClientContracts(contracts);*/
-        return modelMapper.map(clientEntity, ClientDto.class);
+        ClientDto client = modelMapper.map(clientEntity, ClientDto.class);
+        return client;
     }
 
     private ClientEntity convertToEntity(ClientDto clientDto) {
@@ -97,9 +102,5 @@ public class ClientService {
     }
 
 
-    public void createClient(UserEntity userEntity) {
-        ClientEntity clientEntity = new ClientEntity(userEntity);
-        clientDAO.save(clientEntity);
-    }
 
 }

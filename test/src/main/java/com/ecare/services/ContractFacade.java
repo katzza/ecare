@@ -1,25 +1,21 @@
 package com.ecare.services;
 
-import com.ecare.dao.ClientDAO;
 import com.ecare.dao.ContractDAO;
-import com.ecare.dao.NumberDAO;
+import com.ecare.dao.OptionDAO;
 import com.ecare.dao.TariffDAO;
-import com.ecare.domain.ClientEntity;
-import com.ecare.domain.ContractEntity;
-import com.ecare.domain.NumberEntity;
-import com.ecare.domain.TariffEntity;
+import com.ecare.domain.*;
+import com.ecare.dto.ClientDto;
 import com.ecare.dto.ContractDto;
+import com.ecare.dto.TariffDto;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.LockModeType;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ThreadLocalRandom;
 
 
 @Slf4j
@@ -31,11 +27,17 @@ public class ContractFacade {
     @Autowired
     ClientService clientService;
     @Autowired
+    OptionService optionService;
+    @Autowired
     NumberService numberService;
     @Autowired
-    ClientDAO clientDAO; //todo move to Service
+    TariffDAO tariffDAO;
     @Autowired
-    TariffDAO tariffDAO; //todo move to Service
+    OptionDAO optionDAO;
+    @Autowired
+    ContractOptionService contractOptionService;
+    @Autowired
+    TariffService tariffService;
     @Autowired
     ModelMapper modelMapper;
 
@@ -95,23 +97,22 @@ public class ContractFacade {
 
 
     @Transactional
-    public void showTariffandOptions(ContractDto contractDto) {
+    public void showAllTariffs(ContractDto contractDto) {
         Map<String, Integer> mapTariffs = contractDto.getTariffs();
         tariffDAO.getTariffNamesAndIds().forEach(array -> mapTariffs.put((String) array[1], (Integer) array[0]));
     }
 
     @Transactional
-    public Optional<String> save(ContractDto contractDto) {
+    public int save(ContractDto contractDto) {
         ContractEntity contract = new ContractEntity();
-      //  ClientEntity client = clientService.findById(contractDto.getClientId());
-        ClientEntity client = (ClientEntity) clientDAO.findById(contractDto.getClientId());
+        ClientEntity client = clientService.findEntityById(contractDto.getClientId());
         contract.setClientByClientId(client);
         TariffEntity tariff = (TariffEntity) tariffDAO.findById(contractDto.getTariffId().getTariffId());
         contract.setTariffByTariffId(tariff);
         NumberEntity number = numberService.bookNumber(contractDto.getPhoneNumber().getId());
         contract.setPhoneNumber(number.getPhoneNumber());
         contractDAO.save(contract);
-        return Optional.empty();
+        return contract.getContractId();
     }
 
     private ContractDto convertToDto(ContractEntity contractEntity) {
@@ -127,5 +128,55 @@ public class ContractFacade {
         return modelMapper.map(contractDto, ContractEntity.class);
     }
 
+
+    public ContractDto prepareNewContract(int clientId) {
+        ContractDto contractDto = new ContractDto();
+        numberService.generateFreeNumbers();
+        ClientDto client = clientService.findById(clientId);
+        contractDto.setClientId(client.getClientId());
+        contractDto.setClientEmail(client.getUser().getEmail());
+        numberService.putFreeNumbersToContractDto(contractDto);
+        showAllTariffs(contractDto);
+        return contractDto;
+    }
+
+    @Transactional
+    public ContractDto prepareNewContractToSetOptions(int contractId) {
+        ContractDto contract = findById(contractId);
+        TariffDto tariff = tariffService.findByIdWithAddedOptions(contract.getTariffId().getTariffId());
+        contract.setTariffId(tariff);
+        showUnselectedMultiFreeOptions(contract, tariff);
+        return contract;
+    }
+
+    @Transactional
+    public void showUnselectedMultiFreeOptions(ContractDto contractDto, TariffDto tariffDto) {
+        Map<String, Integer> mapOptions = contractDto.getContractOptions();
+        int tariffId = tariffDto.getTariffId();
+        if (tariffDto.getCallsOption() != null) {
+            optionDAO.getNotTariffAddedMultioptions(OptionType.CALLS.getValueNumber(), tariffId).forEach(array -> mapOptions.put((String) array[1], (Integer) array[0]));
+        }
+        if (tariffDto.getInternetOption() != null) {
+            optionDAO.getNotTariffAddedMultioptions(OptionType.INTERNET.getValueNumber(), tariffId).forEach(array -> mapOptions.put((String) array[1], (Integer) array[0]));
+        }
+        if (tariffDto.getTravelOption() != null) {
+            optionDAO.getNotTariffAddedMultioptions(OptionType.TRAVEL.getValueNumber(), tariffId).forEach(array -> mapOptions.put((String) array[1], (Integer) array[0]));
+        }
+        optionDAO.getUnselectedFreeOptions(tariffId).forEach(array -> mapOptions.put((String) array[1], (Integer) array[0]));
+    }
+
+    @Transactional
+    public void saveOptionsToContract(ContractDto contractDto) {
+        ContractEntity contract = (ContractEntity) contractDAO.findById(contractDto.getContractId());
+        int contractOptionsNumber = contractDto.getSelectedContractOptionIds().size();
+        if (contractOptionsNumber>0){
+            for (int i = 0; i < contractOptionsNumber; i++){
+                OptionEntity option = (OptionEntity) optionDAO.findById(contractDto.getSelectedContractOptionIds().get(i));
+                contractOptionService.saveContractOptionInDataBase(contract, option, this);
+            }
+        }
+/*        contractDAO.update(contract);
+        return Optional.empty();*/
+    }
 
 }

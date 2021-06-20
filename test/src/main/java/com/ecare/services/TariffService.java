@@ -51,7 +51,7 @@ public class TariffService {
         return tariffs;
     }
 
-    public TariffDto findById(int tariffId) {
+    public TariffDto findByIdWithAddedOptions(int tariffId) {
         try {
             TariffEntity tariffEntity = (TariffEntity) tariffDAO.findById(tariffId);
             tariffEntity.setTariffOptionEntities(null);
@@ -124,7 +124,7 @@ public class TariffService {
             tariffOptionsDAO.save(tariffOptionsEntity);
             return Optional.empty();
         } else
-            return Optional.of(String.format("Combination of tariff %sand option %s is already appear in the database", tariff.getTariffName(), option.getOptionName()));
+            return Optional.of(String.format("Combination of tariff %s and option %s is already appear in the database", tariff.getTariffName(), option.getOptionName()));
     }
 
     private boolean tariffsOptionCombinationAbsent(TariffEntity tariff, OptionEntity option) {
@@ -317,6 +317,15 @@ public class TariffService {
         }
     }
 
+
+    public List<TariffDto> getTariffsShowMultioptions() {
+        List<TariffDto> listTariffs = getAllTariffs();
+        for (TariffDto tariff : listTariffs) {
+            showTariffAddedMultiFreeOptions(tariff);
+        }
+        return listTariffs;
+    }
+
     public void deleteOptionFromTariff(int tariffId, int optionId) {
         tariffOptionsDAO.delete(tariffId, optionId);
     }
@@ -329,4 +338,28 @@ public class TariffService {
         return modelMapper.map(tariffDto, TariffEntity.class);
     }
 
+    public TariffDto prepareTariffForUpdate(int tariffId) {
+        TariffDto tariff = findByIdWithAddedOptions(tariffId);
+        showUniqueCallsOptions(tariff);
+        showUniqueTravelOptions(tariff);
+        showUniqueInternetOptions(tariff);
+        showUnselectedFreeOptions(tariff);
+        return tariff;
+    }
+
+    public TariffDto prepareNewTariff() {
+        TariffDto tariffDto = new TariffDto();
+        showUniqueCallsOptions(tariffDto);
+        showUniqueInternetOptions(tariffDto);
+        showUniqueTravelOptions(tariffDto);
+        showFreeOptions(tariffDto);
+        return tariffDto;
+    }
+
+    public TariffDto getTariffAndShowHisOptions(int tariffId) {
+        TariffDto tariff = findByIdWithAddedOptions(tariffId);
+        showTariffAddedUniqueOptions(tariff);
+        showUnselectedMultiOptions(tariff);
+        return tariff;
+    }
 }

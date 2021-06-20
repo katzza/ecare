@@ -11,7 +11,7 @@ import javax.validation.Valid;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/option")   //todo pagination
+@RequestMapping("/option")
 public class OptionController {
 
     @Autowired
@@ -19,11 +19,11 @@ public class OptionController {
 
     @GetMapping("/newoption")
     public String createNewOption(Model model) {
-        OptionDto optionDto = new OptionDto();
-        optionService.showBaseOptions(optionDto);
+        OptionDto optionDto = optionService.getOptionDtoShowBaseOptions();
         model.addAttribute("option", optionDto);
         return "employee/newoption";
     }
+
 
     @PostMapping("/newoption")
     public String createNewOption(@ModelAttribute("option") @Valid OptionDto optionDto, Model model) {
@@ -37,9 +37,8 @@ public class OptionController {
 
     @GetMapping("/updateoption")
     public String updateOption(@RequestParam("optionId") int optionId, Model model) {
-        OptionDto optionDto = optionService.findById(optionId);
-        optionService.showBaseOptions(optionDto);
-         model.addAttribute("option", optionDto);
+        OptionDto optionDto = optionService.getOptionByIdShowBaseOptions(optionId);
+        model.addAttribute("option", optionDto);
         return "employee/updateoption";
     }
 
@@ -50,7 +49,7 @@ public class OptionController {
             model.addAttribute("message", error.get());
             return "employee/updateoption";
         }
-      /*  model.addAttribute("message", "Option was successfully changed");*/
+        /*  model.addAttribute("message", "Option was successfully changed");*/
         return "redirect:/employee/options";
     }
 
