@@ -4,6 +4,7 @@ import com.ecare.dto.ClientDto;
 import com.ecare.dto.ContractDto;
 import com.ecare.services.ClientService;
 import com.ecare.services.ContractFacade;
+import com.ecare.services.NumberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,16 +22,18 @@ public class ContractController {
     ContractFacade contractFacade;
     @Autowired
     private ClientService clientService;
+    @Autowired
+    private NumberService numberService;
 
     @GetMapping("/contract/newcontract")
     public String createContract(@RequestParam("clientId") int clientId, Model model) {
         ContractDto contractDto = new ContractDto();
-        contractFacade.generateFreeNumbers();
+        numberService.generateFreeNumbers();
         ClientDto client = clientService.findById(clientId);
         contractDto.setClientId(client.getClientId());
         contractDto.setClientEmail(client.getUser().getEmail());
         model.addAttribute("contract", contractDto);
-        contractFacade.showNumbers(contractDto);
+        numberService.putFreeNumbersToContractDto(contractDto);
         contractFacade.showTariffandOptions(contractDto);
         return "client/newcontract";
     }

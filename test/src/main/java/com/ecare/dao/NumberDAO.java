@@ -15,4 +15,11 @@ public class NumberDAO extends AbstractHibernateDAO {
     public List<Object[]> getFreeNumbers() {
         return getCurrentSession().createNamedQuery("FreeNumber.findUnbooked", Object[].class).getResultList();
     }
+
+    public List<NumberEntity> findByPhone(int phoneNumber) {
+        return getCurrentSession().createNamedQuery("FreeNumber.findByPhone", NumberEntity.class)
+                .setParameter(phoneNumber, phoneNumber)
+                .getResultList();
+    }
+
 }

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -56,7 +55,7 @@ public class ClientService {
         return clientDAO.findClientByUserEmail(email).stream()     //todo rewrite methods
                 .findFirst()
                 .map(this::getClientDto)
-                .orElseThrow(() -> new UserNotFoundException("There is no client with that email:" + email));
+                .orElseThrow(() -> new UserNotFoundException(String.format("There is no client with that email:%s", email)));
     }
 
     private ClientDto getClientDto(ClientEntity client) {
@@ -70,7 +69,7 @@ public class ClientService {
         return clientDAO.findClientByPhone(phoneNumber).stream()
                 .findFirst()
                 .map(this::getClientDto)
-                .orElseThrow(() -> new UserNotFoundException("There is no client with that phone number:" + phoneNumber));
+                .orElseThrow(() -> new UserNotFoundException(String.format("There is no client with that phone number:%s", phoneNumber)));
     }
 
     @Transactional

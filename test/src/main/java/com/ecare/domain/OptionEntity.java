@@ -42,9 +42,6 @@ import java.util.List;
 
         @NamedQuery(name = "Option.getAllSalesOptions",
                 query = "SELECT o FROM OptionEntity o where o.isBase = false order by o.baseOptionId, o.optionName"),
-        @NamedQuery(name = "Option.getOptionsByMainOptionId",
-                query = "SELECT o FROM OptionEntity o where o.optionId IN (SELECT z.addOptionByOptionId.optionId FROM OptionOptionsEntity z WHERE z.mainOptionByOptionId.optionId = : main_option_id)"),
-
 })
 
 public class OptionEntity implements Serializable {

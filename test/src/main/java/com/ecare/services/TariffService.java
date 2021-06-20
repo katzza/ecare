@@ -5,7 +5,6 @@ import com.ecare.dao.OptionDAO;
 import com.ecare.dao.TariffDAO;
 import com.ecare.dao.TariffOptionsDAO;
 import com.ecare.domain.*;
-import com.ecare.dto.HotTariffDto;
 import com.ecare.dto.OptionDto;
 import com.ecare.dto.TariffDto;
 import com.ecare.error.BaseObjectDeletionException;
@@ -46,8 +45,7 @@ public class TariffService {
         List<TariffEntity> tariffEntitys = tariffDAO.findAll();
         List<TariffDto> tariffs = tariffEntitys.stream().map(this::convertToDto)
                 .collect(Collectors.toList());
-        for (TariffDto tariff :    //todo rewrite
-                tariffs) {
+        for (TariffDto tariff : tariffs) {
             showTariffAddedMultiFreeOptions(tariff);
         }
         return tariffs;
@@ -60,7 +58,6 @@ public class TariffService {
             TariffDto tariff = convertToDto(tariffEntity);
             showTariffAddedUniqueOptions(tariff);
             showTariffAddedMultiFreeOptions(tariff);
-            //   showTariffAddedFreeOptions(tariff);
             return tariff;
         } catch (Exception ex) {
             TariffEntity tariffEntity = new TariffEntity();
@@ -69,9 +66,9 @@ public class TariffService {
     }
 
     public Optional<String> saveTariff(TariffDto tariffDto) {
-        if (tariffDAO.findByName(tariffDto.getTariffName()).size() > 0) {
-            log.info("Tariff " + tariffDto.getTariffName() + " already exist");
-            return Optional.of("Tariff " + tariffDto.getTariffName() + " already exist");
+        if (!tariffDAO.findByName(tariffDto.getTariffName()).isEmpty()) {
+            log.info(String.format("Tariff %s already exist", tariffDto.getTariffName()));
+            return Optional.of(String.format("Tariff %s already exist", tariffDto.getTariffName()));
         }
         int internetOptionId = tariffDto.getInternetOptionId();
         int travelOptionId = tariffDto.getTravelOptionId();
@@ -84,11 +81,12 @@ public class TariffService {
         tariffDto.setTariffId(tariff.getTariffId());
 
         if (setMainTariffOption(callsOptionId, tariff))
-            return Optional.of("Calls option with Id " + callsOptionId + " not found");
+            return Optional.of(String.format("Calls option with Id %d not found", callsOptionId));
         if (setMainTariffOption(internetOptionId, tariff))
-            return Optional.of("Internet option with Id " + internetOptionId + " not found");
-        if (setMainTariffOption(travelOptionId, tariff))
-            return Optional.of("Travel option with Id " + travelOptionId + " not found");
+            return Optional.of(String.format("Internet option with Id %d not found", internetOptionId));
+        if (setMainTariffOption(travelOptionId, tariff)) {
+            return Optional.of(String.format("Travel option with Id %d not found", travelOptionId));
+        }
 
         int freeOptionsNumber = tariffDto.getFreeOptionIds().size();
         if (freeOptionsNumber > 0) {
@@ -126,14 +124,11 @@ public class TariffService {
             tariffOptionsDAO.save(tariffOptionsEntity);
             return Optional.empty();
         } else
-            return Optional.of("Combination of tariff " + tariff.getTariffName() + "and option " + option.getOptionName() + " is already appear in the database");
+            return Optional.of(String.format("Combination of tariff %sand option %s is already appear in the database", tariff.getTariffName(), option.getOptionName()));
     }
 
     private boolean tariffsOptionCombinationAbsent(TariffEntity tariff, OptionEntity option) {
-        if (tariffOptionsDAO.findByTariffIdOptionId(tariff.getTariffId(), option.getOptionId()).size() == 0) {
-            return true;
-        }
-        return false;
+        return tariffOptionsDAO.findByTariffIdOptionId(tariff.getTariffId(), option.getOptionId()).isEmpty();
     }
 
 
@@ -187,7 +182,7 @@ public class TariffService {
                     OptionEntity option = (OptionEntity) optionDAO.findById(newOptionId);
                     saveTariffOptionInDataBase(tariff, option);
                 } catch (Exception ex) {
-                    return Optional.of("Option with Id " + newOptionId + " not found");
+                    return Optional.of(String.format("Option with Id %d not found", newOptionId));
                 }
         }
         return Optional.empty();
@@ -209,13 +204,13 @@ public class TariffService {
     public void deleteTariff(int tariffId) {
         TariffEntity tarifftoDelete = (TariffEntity) tariffDAO.findById(tariffId);
         List<TariffEntity> baseTariff = tariffDAO.getBaseTariff();
-        if (tarifftoDelete.isBaseTariff() || baseTariff.size() == 0) {
+        if (tarifftoDelete.isBaseTariff() || baseTariff.isEmpty()) {
             throw new BaseObjectDeletionException
                     (String.format("The object you are trying to delete: %s is the base object, or the base object has not been assigned yet. " +
                             "Please assign a new base object first!", tarifftoDelete.getTariffName()));
         } else {
             List<ContractEntity> contracts = contractFacade.getContractsByTariffId(tariffId);
-            if (contracts.size() > 0) {
+            if (!contracts.isEmpty()) {
                 for (ContractEntity contract : contracts) {
                     contract.setTariffByTariffId(baseTariff.get(0));
                     contractDAO.update(contract);
@@ -228,7 +223,7 @@ public class TariffService {
 
     public void makeBaseTariff(int tariffId) {
         List<TariffEntity> oldBaseTariff = tariffDAO.getBaseTariff();
-        if (oldBaseTariff.size() > 0) {
+        if (!oldBaseTariff.isEmpty()) {
             oldBaseTariff.get(0).setBaseTariff(false);
             tariffDAO.update(oldBaseTariff.get(0));
         }
@@ -237,35 +232,22 @@ public class TariffService {
         tariffDAO.update(newBaseTariff);
     }
 
-    public void showMultipleOptions(TariffDto tariffDto) {
-        Map<String, Integer> mapOptions = tariffDto.getMultipleOptions();
-        if (tariffDto.getCallsOption() != null) {
-            optionDAO.getOptionsByParameters(1, true).forEach(array -> mapOptions.put((String) array[1], (Integer) array[0]));
-        }
-        if (tariffDto.getInternetOption() != null) {
-            optionDAO.getOptionsByParameters(2, true).forEach(array -> mapOptions.put((String) array[1], (Integer) array[0]));
-        }
-        if (tariffDto.getTravelOption() != null) {
-            optionDAO.getOptionsByParameters(3, true).forEach(array -> mapOptions.put((String) array[1], (Integer) array[0]));
-        }
-    }
-
     public void showUniqueCallsOptions(TariffDto tariffDto) {
         Map<String, Integer> mapOptions = tariffDto.getCallsOptions();
-        optionDAO.getOptionsByParameters(1, false).forEach(array -> mapOptions.put((String) array[1], (Integer) array[0]));
+        optionDAO.getOptionsByParameters(OptionType.CALLS.getValueNumber(), false).forEach(array -> mapOptions.put((String) array[1], (Integer) array[0]));
         mapOptions.put(" ", 0); //for empty
     }
 
     public void showUniqueInternetOptions(TariffDto tariffDto) {
         Map<String, Integer> mapOptions = tariffDto.getInternetOptions();
-        optionDAO.getOptionsByParameters(2, false).forEach(array -> mapOptions.put((String) array[1], (Integer) array[0]));
+        optionDAO.getOptionsByParameters(OptionType.INTERNET.getValueNumber(), false).forEach(array -> mapOptions.put((String) array[1], (Integer) array[0]));
         mapOptions.put(" ", 0); //for empty
     }
 
     public void showUniqueTravelOptions(TariffDto tariffDto) {
         Map<String, Integer> mapOptions = tariffDto.getTravelOptions();
         mapOptions.put(" ", 0); //for empty
-        optionDAO.getOptionsByParameters(3, false).forEach(array -> mapOptions.put((String) array[1], (Integer) array[0]));
+        optionDAO.getOptionsByParameters(OptionType.TRAVEL.getValueNumber(), false).forEach(array -> mapOptions.put((String) array[1], (Integer) array[0]));
     }
 
     public void showFreeOptions(TariffDto tariffDto) {
@@ -285,13 +267,13 @@ public class TariffService {
         int tariffId = tariffDto.getTariffId();
         Map<String, Integer> mapOptions = tariffDto.getMultipleOptions();
         if (tariffDto.getCallsOption() != null) {
-            optionDAO.getNotTariffAddedMultioptions(1, tariffId).forEach(array -> mapOptions.put((String) array[1], (Integer) array[0]));
+            optionDAO.getNotTariffAddedMultioptions(OptionType.CALLS.getValueNumber(), tariffId).forEach(array -> mapOptions.put((String) array[1], (Integer) array[0]));
         }
         if (tariffDto.getInternetOption() != null) {
-            optionDAO.getNotTariffAddedMultioptions(2, tariffId).forEach(array -> mapOptions.put((String) array[1], (Integer) array[0]));
+            optionDAO.getNotTariffAddedMultioptions(OptionType.INTERNET.getValueNumber(), tariffId).forEach(array -> mapOptions.put((String) array[1], (Integer) array[0]));
         }
         if (tariffDto.getTravelOption() != null) {
-            optionDAO.getNotTariffAddedMultioptions(3, tariffId).forEach(array -> mapOptions.put((String) array[1], (Integer) array[0]));
+            optionDAO.getNotTariffAddedMultioptions(OptionType.TRAVEL.getValueNumber(), tariffId).forEach(array -> mapOptions.put((String) array[1], (Integer) array[0]));
         }
     }
 
@@ -311,17 +293,17 @@ public class TariffService {
     }
 
     public void showTariffAddedUniqueOptions(TariffDto tariff) {
-        OptionDto callsOption = optionService.getMainOptionByBaseAndTariffId(1, tariff.getTariffId());
+        OptionDto callsOption = optionService.getMainOptionByBaseAndTariffId(OptionType.CALLS.getValueNumber(), tariff.getTariffId());
         if (callsOption != null) {
             tariff.setCallsOption(callsOption);
             log.info(tariff.getCallsOption().getOptionName());
         }
-        OptionDto internetOption = optionService.getMainOptionByBaseAndTariffId(2, tariff.getTariffId());
+        OptionDto internetOption = optionService.getMainOptionByBaseAndTariffId(OptionType.INTERNET.getValueNumber(), tariff.getTariffId());
         if (internetOption != null) {
             tariff.setInternetOption(internetOption);
             log.info(tariff.getInternetOption().getOptionName());
         }
-        OptionDto travelOption = optionService.getMainOptionByBaseAndTariffId(3, tariff.getTariffId());
+        OptionDto travelOption = optionService.getMainOptionByBaseAndTariffId(OptionType.TRAVEL.getValueNumber(), tariff.getTariffId());
         if (travelOption != null) {
             tariff.setTravelOption(travelOption);
             log.info(tariff.getTravelOption().getOptionName());
