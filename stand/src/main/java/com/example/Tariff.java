@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.annotation.ManagedBean;
+import javax.json.bind.annotation.JsonbProperty;
 import java.io.Serializable;
 
 @Getter
@@ -13,6 +14,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @ManagedBean
 public class Tariff implements Serializable {
+
     private String name;
     private String description;
     private int price;

@@ -73,7 +73,7 @@
         </tr>
     </table>
     <br>
-    If you want to choose more additional options, add the rest of the basic options to the tariff.
+          If you want to choose more additional options, add the rest of the basic options to the tariff.
     <br><br>
     <label for="multipleoptions">Set base-depending options to tariff</label>
     <form:select path="multipleOptionIds" multiple="multiple" id="multipleoptions">

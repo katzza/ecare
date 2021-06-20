@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.LockModeType;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -30,13 +31,14 @@ public class ContractFacade {
     @Autowired
     ClientService clientService;
     @Autowired
+    NumberService numberService;
+    @Autowired
     ClientDAO clientDAO; //todo move to Service
     @Autowired
     TariffDAO tariffDAO; //todo move to Service
     @Autowired
-    NumberDAO numberDAO; //todo move to Service
-    @Autowired
     ModelMapper modelMapper;
+
 
     @Transactional
     public List<ContractEntity> getContractsByTariffId(int id) {
@@ -91,24 +93,6 @@ public class ContractFacade {
         return contract.isBlockedByCompany() || contract.isBlockedByUser();
     }
 
-    @Transactional
-    public void showNumbers(ContractDto contractDto) {
-        Map<String, Integer> mapNumbers = contractDto.getNumbers();
-        numberDAO.getFreeNumbers().forEach(array -> mapNumbers.put((String) array[1], (Integer) array[0]));
-    }
-
-    @Transactional
-    public void generateFreeNumbers() {    //todo to another Service
-        if (numberDAO.getFreeNumbers().size() < 3) {    //todo move to constant
-            ThreadLocalRandom random = ThreadLocalRandom.current();
-            for (int i = 0; i < 3; i++) {
-                int phoneNumber = random.nextInt(9000001) + 999999;  //todo move to constant
-                NumberEntity newNumber = new NumberEntity(Integer.toString(phoneNumber));
-                //todo check or exception
-                numberDAO.save(newNumber);
-            }
-        }
-    }
 
     @Transactional
     public void showTariffandOptions(ContractDto contractDto) {
@@ -119,13 +103,12 @@ public class ContractFacade {
     @Transactional
     public Optional<String> save(ContractDto contractDto) {
         ContractEntity contract = new ContractEntity();
+      //  ClientEntity client = clientService.findById(contractDto.getClientId());
         ClientEntity client = (ClientEntity) clientDAO.findById(contractDto.getClientId());
         contract.setClientByClientId(client);
         TariffEntity tariff = (TariffEntity) tariffDAO.findById(contractDto.getTariffId().getTariffId());
         contract.setTariffByTariffId(tariff);
-        NumberEntity number = (NumberEntity) numberDAO.findById(contractDto.getPhoneNumber().getId());
-        number.setBooked(true);
-        numberDAO.update(number);
+        NumberEntity number = numberService.bookNumber(contractDto.getPhoneNumber().getId());
         contract.setPhoneNumber(number.getPhoneNumber());
         contractDAO.save(contract);
         return Optional.empty();

@@ -11,12 +11,12 @@ public class HotTariffDto {
     @NotNull
     @NotEmpty
     @NotBlank
-    private String tariffName;
+    private String name;
 
     @NotNull
     @NotEmpty
     @NotBlank
-    private String tariffDescription;
+    private String description;
 
     @NotNull
     private int price;

@@ -26,7 +26,7 @@ public class WebSocket {
     @Inject
     @Push(channel = "websocket")
     private PushContext pushContext;
-    private List<Tariff> tariffs = new CopyOnWriteArrayList<>();//All threads will work with their own collection
+    private List<Tariff> tariffs = new CopyOnWriteArrayList<>();//Multithreading
 
     public List<Tariff> getTariffs() {
         return tariffs;

@@ -108,6 +108,8 @@ public class Config implements WebMvcConfigurer {
         hibernateProperties.setProperty("hibernate.connection.CharacterEncoding", "UTF-8");
         hibernateProperties.setProperty("hibernate.connection.Useunicode", "true");
         hibernateProperties.setProperty("hibernate.connection.sql-script-encoding", "UTF-8");
+        hibernateProperties.setProperty("hibernate.show_sql", "true");
+        hibernateProperties.setProperty("hibernate.format_sql", "true");
         return hibernateProperties;
     }
 
