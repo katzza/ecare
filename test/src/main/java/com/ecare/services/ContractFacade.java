@@ -103,7 +103,7 @@ public class ContractFacade {
     }
 
     @Transactional
-    public Optional<String> save(ContractDto contractDto) {
+    public int save(ContractDto contractDto) {
         ContractEntity contract = new ContractEntity();
         ClientEntity client = clientService.findEntityById(contractDto.getClientId());
         contract.setClientByClientId(client);
@@ -112,7 +112,7 @@ public class ContractFacade {
         NumberEntity number = numberService.bookNumber(contractDto.getPhoneNumber().getId());
         contract.setPhoneNumber(number.getPhoneNumber());
         contractDAO.save(contract);
-        return Optional.empty();
+        return contract.getContractId();
     }
 
     private ContractDto convertToDto(ContractEntity contractEntity) {
@@ -140,6 +140,7 @@ public class ContractFacade {
         return contractDto;
     }
 
+    @Transactional
     public ContractDto prepareNewContractToSetOptions(int contractId) {
         ContractDto contract = findById(contractId);
         TariffDto tariff = tariffService.findByIdWithAddedOptions(contract.getTariffId().getTariffId());
@@ -148,7 +149,8 @@ public class ContractFacade {
         return contract;
     }
 
-    private void showUnselectedMultiFreeOptions(ContractDto contractDto, TariffDto tariffDto) {
+    @Transactional
+    public void showUnselectedMultiFreeOptions(ContractDto contractDto, TariffDto tariffDto) {
         Map<String, Integer> mapOptions = contractDto.getContractOptions();
         int tariffId = tariffDto.getTariffId();
         if (tariffDto.getCallsOption() != null) {
@@ -163,6 +165,7 @@ public class ContractFacade {
         optionDAO.getUnselectedFreeOptions(tariffId).forEach(array -> mapOptions.put((String) array[1], (Integer) array[0]));
     }
 
+    @Transactional
     public void saveOptionsToContract(ContractDto contractDto) {
         ContractEntity contract = (ContractEntity) contractDAO.findById(contractDto.getContractId());
         int contractOptionsNumber = contractDto.getSelectedContractOptionIds().size();

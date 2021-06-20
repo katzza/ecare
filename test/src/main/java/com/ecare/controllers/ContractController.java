@@ -30,18 +30,20 @@ public class ContractController {
 
     @PostMapping("/contract/newcontract")
     public String createContract(@ModelAttribute("contract") ContractDto contractDto, Model model) {
-        Optional<String> error = contractFacade.save(contractDto);
-        if (error.isPresent()) {
-            model.addAttribute("message", error.get());
+        try {
+            int contractId = contractFacade.save(contractDto);
+            model.addAttribute("contractId", contractId);
+            return "redirect:/contract/setmultioptions";
+        } catch (Exception ex) {
+            model.addAttribute("message", ex.getMessage());
             contractFacade.showAllTariffs(contractDto);
             return "client/newcontract";
         }
 /*        model.addAttribute("message", "New contract was successfully added");
         model.addAttribute("client", clientService.findById(contractDto.getClientId()));
         return "client/clientinfo";*/
-      //  model.addAttribute("tariffId", contractDto.getTariffId());
-        model.addAttribute("contractId", contractDto.getContractId());
-        return "redirect:/contract/setmultioptions";
+        //  model.addAttribute("tariffId", contractDto.getTariffId());
+
     }
 
     @GetMapping("/contract/setmultioptions")
@@ -51,10 +53,11 @@ public class ContractController {
         return "employee/addcontractoptions";
     }
 
-    @PostMapping("/setmultioptions")
+    @PostMapping("/contract/setmultioptions")
     public String setMultioptions(@ModelAttribute("contract") ContractDto contractDto, Model model) {
-        try {contractFacade.saveOptionsToContract(contractDto);}
-        catch (Exception ex) {
+        try {
+            contractFacade.saveOptionsToContract(contractDto);
+        } catch (Exception ex) {
             model.addAttribute("message", ex.getMessage());
             return "employee/addcontractoptions";
         }

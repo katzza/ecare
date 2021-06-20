@@ -16,19 +16,6 @@
         }
     </style>
     <jsp:include page="../header.jsp"/>
-    <%--    <script type="text/javascript">
-            function validate() {
-                if (document.getElementById("callsoption").value === "0"
-                    && document.getElementById("internetoption").value === "0") {
-                    if (document.getElementById("traveloption").value === "0") {
-                        alert("Please check out the option! At least one of the options must be selected for the tariff.");
-                        document.getElementById("callsoption").focus();
-                        return false;
-                    }
-                }
-                return true;
-            }
-        </script>--%>
     <title>Contract options</title>
 </head>
 <body>
@@ -96,7 +83,7 @@
     <br><br>
     <br><br>
     <form:hidden path="contractId" value="${contract.contractId}"/>
-    <input type="submit" value="Next">
+    <input type="submit" value="Save">
     </form:form>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"

@@ -65,7 +65,7 @@
 
     <br><br>
     <input type="hidden" name="contractId" value=${contract.contractId}>
-    <input type="hidden" name="clientId" value=${contract.clientId}>
+  <%--  <input type="hidden" name="clientId" value=${contract.clientId}>--%>
     <input type="submit" onclick="validate()" value="Save">
 </div>
 
