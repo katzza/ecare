@@ -32,28 +32,28 @@ public class ContractController {
     public String createContract(@ModelAttribute("contract") ContractDto contractDto, Model model) {
         try {
             int contractId = contractFacade.save(contractDto);
-            model.addAttribute("contractId", contractId);
-            return "redirect:/contract/setmultioptions";
+           /* model.addAttribute("contractId", contractId);
+            return "redirect:/contract/setmultioptions";*/
+            model.addAttribute("message", "New contract was successfully added");
+            model.addAttribute("client", clientService.findById(contractDto.getClientId()));
+            return "client/clientinfo";
         } catch (Exception ex) {
             model.addAttribute("message", ex.getMessage());
             contractFacade.showAllTariffs(contractDto);
             return "client/newcontract";
         }
-/*        model.addAttribute("message", "New contract was successfully added");
-        model.addAttribute("client", clientService.findById(contractDto.getClientId()));
-        return "client/clientinfo";*/
         //  model.addAttribute("tariffId", contractDto.getTariffId());
 
     }
 
-    @GetMapping("/contract/setmultioptions")
+/*    @GetMapping("/contract/setmultioptions")
     public String setOptionsToContract(@RequestParam("contractId") int contractId, Model model) {
         ContractDto contractDto = contractFacade.prepareNewContractToSetOptions(contractId);
         model.addAttribute("contract", contractDto);
         return "employee/addcontractoptions";
-    }
+    }*/
 
-    @PostMapping("/contract/setmultioptions")
+   /* @PostMapping("/contract/setmultioptions")
     public String setMultioptions(@ModelAttribute("contract") ContractDto contractDto, Model model) {
         try {
             contractFacade.saveOptionsToContract(contractDto);
@@ -64,7 +64,7 @@ public class ContractController {
         model.addAttribute("message", "New contract was successfully added");
         model.addAttribute("client", clientService.findById(contractDto.getClientId()));
         return "client/clientinfo";
-    }
+    }*/
 
 
     @GetMapping("/contract/editcontract")

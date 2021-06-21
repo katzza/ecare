@@ -35,8 +35,6 @@ public class ContractFacade {
     @Autowired
     OptionDAO optionDAO;
     @Autowired
-    ContractOptionService contractOptionService;
-    @Autowired
     TariffService tariffService;
     @Autowired
     ModelMapper modelMapper;
@@ -145,11 +143,11 @@ public class ContractFacade {
         ContractDto contract = findById(contractId);
         TariffDto tariff = tariffService.findByIdWithAddedOptions(contract.getTariffId().getTariffId());
         contract.setTariffId(tariff);
-        showUnselectedMultiFreeOptions(contract, tariff);
+      //  showUnselectedMultiFreeOptions(contract, tariff);
         return contract;
     }
 
-    @Transactional
+  /*  @Transactional
     public void showUnselectedMultiFreeOptions(ContractDto contractDto, TariffDto tariffDto) {
         Map<String, Integer> mapOptions = contractDto.getContractOptions();
         int tariffId = tariffDto.getTariffId();
@@ -175,8 +173,8 @@ public class ContractFacade {
                 contractOptionService.saveContractOptionInDataBase(contract, option, this);
             }
         }
-/*        contractDAO.update(contract);
-        return Optional.empty();*/
-    }
+*//*        contractDAO.update(contract);
+        return Optional.empty();*//*
+    }*/
 
 }
