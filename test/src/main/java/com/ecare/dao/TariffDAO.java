@@ -39,6 +39,7 @@ public class TariffDAO extends AbstractHibernateDAO {
         return getCurrentSession().createNamedQuery("Tariff.getAllTariffs", Object[].class).getResultList();
     }
 
+
     @Override
     public List<TariffEntity> findAll() {
         return getCurrentSession().createQuery("from " + "TariffEntity order by tariffName").list();
