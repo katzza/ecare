@@ -40,9 +40,9 @@
 
             <fieldset>
                 <div class="form-group">
-                    <input type="email" maxlength="254" required="required" id="login" class="form-control"
+                    <input type="email" maxlength="254" required="required" id="email" class="form-control"
                            placeholder="your@mail.com"
-                           name="username"
+                           name="email"
                            autofocus>
                 </div>
                 <br>
@@ -50,7 +50,7 @@
                     <input required="required" minlength="3" maxlength="10" id="password" class="form-control"
                            placeholder="password" name="password"
                            type="password"
-                           value="">
+                           <%--value=""--%>>
                 </div>
                 <h1></h1>
                 <h1></h1>
