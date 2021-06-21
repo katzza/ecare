@@ -19,18 +19,18 @@ public class NumberService {
     @Autowired
     ClientService clientService;
 
-    private final int freeNumbersSize = 3;
-    private final int startRandom = 999999;
-    private final int finishRandom = 9000001;
+    private final int FREE_NUMBER_SIZE = 3;
+    private final int START_RANDOM = 999999;
+    private final int FINISH_RANDOM = 9000001;
 
     /**
      * this method generate new random phone-numbers for contract and save new numbers after unique-check
      */
     public void generateFreeNumbers() {
-        if (numberDAO.getFreeNumbers().size() < freeNumbersSize) {
+        if (numberDAO.getFreeNumbers().size() < FREE_NUMBER_SIZE) {
             ThreadLocalRandom random = ThreadLocalRandom.current();
-            for (int i = 0; i < freeNumbersSize; i++) {
-                int phoneNumber = random.nextInt(finishRandom) + startRandom;
+            for (int i = 0; i < FREE_NUMBER_SIZE; i++) {
+                int phoneNumber = random.nextInt(FINISH_RANDOM) + START_RANDOM;
                 NumberEntity newNumber = new NumberEntity(Integer.toString(phoneNumber));
                 if (numberDAO.findByPhone(newNumber.getPhoneNumber()).isEmpty()) {
                     numberDAO.save(newNumber);

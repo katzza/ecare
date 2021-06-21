@@ -23,7 +23,7 @@ import static java.lang.Thread.sleep;
 @ContextConfiguration(
         classes = {Config.class})
 @Transactional*/
-public class ContractServiceTest {
+public class ContractFacadeTest {
 
     @Mock
     ContractDAO contractDAO;
@@ -44,7 +44,7 @@ public class ContractServiceTest {
     private List<ContractDto> dtoList = new ArrayList<>();
     private List<ContractEntity> entityList = new ArrayList<>();
 
-  /*  @Before
+/*    @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
 

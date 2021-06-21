@@ -1,7 +1,6 @@
 .jumbotron {
-    background-color: #2B3E50;
     color: #fff;
     padding: 50px 25px;
     font-family: Montserrat, sans-serif;
-/*    background: url("pink_flame.jpg");*/
+    background: url("pink_flame.jpg");
 }

@@ -138,14 +138,14 @@ public class ContractFacade {
         return contractDto;
     }
 
-    @Transactional
+/*    @Transactional
     public ContractDto prepareNewContractToSetOptions(int contractId) {
         ContractDto contract = findById(contractId);
         TariffDto tariff = tariffService.findByIdWithAddedOptions(contract.getTariffId().getTariffId());
         contract.setTariffId(tariff);
       //  showUnselectedMultiFreeOptions(contract, tariff);
         return contract;
-    }
+    }*/
 
   /*  @Transactional
     public void showUnselectedMultiFreeOptions(ContractDto contractDto, TariffDto tariffDto) {
