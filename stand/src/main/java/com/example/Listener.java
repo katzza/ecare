@@ -29,7 +29,7 @@ public class Listener implements MessageListener {
     public void onMessage(Message message) {
         if (message instanceof TextMessage) {
             TextMessage textMessage = (TextMessage) message;
-                try {
+            try {
                 String messageText = textMessage.getText();
                 log.info(messageText);
                 Type listType = new TypeToken<ArrayList<Tariff>>() {
@@ -39,7 +39,7 @@ public class Listener implements MessageListener {
                 webSocket.sendMessage("update");
             } catch (JMSException e) {
                 System.out.println(
-                        "Error: " + e.getMessage());
+                        "JMS error: " + e.getMessage());
             }
         }
     }

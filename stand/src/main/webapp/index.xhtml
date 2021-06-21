@@ -19,23 +19,23 @@
             <div class="container">
                 <div class="row text-center">
                     <ui:repeat value="#{webSocket.tariffs}" var="tariff">
-                        <!--   <div class="col-sm-4">
-                               <div class="panel panel-danger">
-                                   <div class="panel-heading">
-                                       <h3 class="panel-title">#{tariff.name}</h3>
-                                   </div>
-                                   &lt;!&ndash;       <div class="panel-heading text-center">#{tariff.name}</div>&ndash;&gt;
-                                   <div class="panel-footer">#{tariff.description}</div>
-                                   <div class="panel-footer">#{tariff.price}</div>
-                               </div>-->
-
-                        <div class="card border-info" style="width: 50rem;">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item"><b>#{tariff.name}</b></li>
-                                <li class="list-group-item">#{tariff.description}</li>
-                                <li class="list-group-item">Price: #{tariff.price}$</li>
-                            </ul>
+                        <div class="col-sm-4">
+                            <div class="panel panel-danger">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">#{tariff.name}</h3>
+                                </div>
+                                <!--       <div class="panel-heading text-center">#{tariff.name}</div>-->
+                                <div class="panel-footer">#{tariff.description}</div>
+                                <div class="panel-footer">#{tariff.price}$</div>
+                            </div>
                         </div>
+                        <!--  <div class="card border-info" style="width: 50rem;">
+                              <ul class="list-group list-group-flush">
+                                  <li class="list-group-item"><b>#{tariff.name}</b></li>
+                                  <li class="list-group-item">#{tariff.description}</li>
+                                  <li class="list-group-item">Price: #{tariff.price}$</li>
+                              </ul>
+                          </div>-->
                         <!--                        <div class="card mb-4 rounded-3 shadow-sm">
                                                     <div class="card-header py-3">
                                                         <h4 class="my-0 fw-normal">#{tariff.name}</h4>

@@ -91,6 +91,14 @@
                         </form>
                     </td>
                 </sec:authorize>
+                <sec:authorize access="!hasRole('EMPLOYEE')">
+                    <td>
+                        <form action="/tariffinfo" method="get">
+                            <input type="hidden" name="tariffId" value=${tariff.tariffId}>
+                            <input type="submit" value="Info" class="btn btn-outline-primary">
+                        </form>
+                    </td>
+                      </sec:authorize>
             </tr>
         </c:forEach>
     </table>

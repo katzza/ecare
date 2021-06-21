@@ -43,7 +43,7 @@ public class ContractEntity implements Serializable {
     @JoinColumn(name = "tariff_id")
     private TariffEntity tariffByTariffId; // many contracts by one Tariff
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "contractByContractId")
-    private List<ContractOptionsEntity> contractAddedOptionsEntities = new ArrayList<>();
+/*    @OneToMany(fetch = FetchType.LAZY, mappedBy = "contractByContractId")
+    private List<ContractOptionsEntity> contractAddedOptionsEntities = new ArrayList<>();*/
 
 }

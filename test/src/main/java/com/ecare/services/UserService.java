@@ -57,7 +57,7 @@ public class UserService {
     public UserDto findByEmail(String email) {
         List<UserEntity> userEntity = userDAO.findByEmail(email);
         if (userEntity.size() == 0) {
-            throw new UsernameNotFoundException("User not found by name: " + email);
+            throw new UsernameNotFoundException(String.format("User not found by name: %s", email));
         } else {
             return convertToDto(userEntity.get(0));
         }

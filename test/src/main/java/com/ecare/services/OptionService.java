@@ -30,7 +30,12 @@ public class OptionService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<String> saveOption(OptionDto optionDto) {  //todo: save - return object or Id, error - exception
+    /**
+     * this method saves new option
+     * @param optionDto from this Dto new option will be created
+     * @return Optional in case of error or Optional.empty();
+     */
+    public Optional<String> saveOption(OptionDto optionDto) {
         if (optionDAO.findByName(optionDto.getOptionName()).size() > 0) {
             log.info("Option {} already exist", optionDto.getOptionName());
             return Optional.of(String.format("Option %s already exist", optionDto.getOptionName()));
@@ -40,6 +45,11 @@ public class OptionService {
         return Optional.empty();
     }
 
+    /**
+     * This method updated existed option in database
+     * @param optionDto - data for update
+     * @return Optional in case of error or Optional.empty();
+     */
     public Optional<String> updateOption(OptionDto optionDto) { //todo: update - return object or Id, error - exception
         OptionEntity option = (OptionEntity) optionDAO.findById(optionDto.getOptionId());
         option.setOptionName(optionDto.getOptionName());
@@ -52,6 +62,10 @@ public class OptionService {
         return Optional.empty();
     }
 
+    /**
+     * this method puts base options to OptionDto to show it on the form
+     * @param optionDto - in this Dto base options will be put
+     */
     public void showBaseOptions(OptionDto optionDto) {
         Map<String, Integer> mapOptions = optionDto.getBaseOptions();
         optionDAO.getBaseOptions().forEach(array -> mapOptions.put((String) array[1], (Integer) array[0]));
@@ -68,6 +82,12 @@ public class OptionService {
 
     }
 
+    /**
+     * This method gets from database main option depends on parameters
+     * @param baseOptionId - id of base option
+     * @param tariffId -id of tariff
+     * @return updated optionDto if exist, or null if not exist
+     */
     public OptionDto getMainOptionByBaseAndTariffId(int baseOptionId, int tariffId) {
         log.info("getUniqueOptionByBaseAndTariffId(baseOptionId, tariffId) {}, {} ", +baseOptionId, tariffId);
         List<OptionEntity> option = optionDAO.getByBaseIsMultuAndTariffId(baseOptionId, false, tariffId);
