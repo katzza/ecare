@@ -26,6 +26,13 @@ public class ClientController {
     }
 
 
+    @RequestMapping ("/tariffinfo")
+    public String tariffinfo(@RequestParam(value = "tariffId") int tariffId, Model model) {
+        TariffDto tariff = tariffService.findByIdWithAddedOptions(tariffId);
+        model.addAttribute("tariff", tariff);
+        return "client/tariffinfo";
+    }
+
     @GetMapping("/client/block")
     public String blockContract(@RequestParam("contractId") int id) {
         contractFacade.blockContractByClient(id);
