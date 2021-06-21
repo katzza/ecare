@@ -6,22 +6,16 @@ import com.ecare.domain.*;
 import com.ecare.dto.ContractDto;
 import com.ecare.dto.NumberDto;
 import com.ecare.services.ClientService;
-import com.ecare.services.ContractService;
+import com.ecare.services.ContractFacade;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Before;
-import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Thread.sleep;
-import static org.mockito.Mockito.*;
 
 @Slf4j
 /*@RunWith(SpringJUnit4ClassRunner.class)
@@ -29,7 +23,7 @@ import static org.mockito.Mockito.*;
 @ContextConfiguration(
         classes = {Config.class})
 @Transactional*/
-public class ContractServiceTest {
+public class ContractFacadeTest {
 
     @Mock
     ContractDAO contractDAO;
@@ -45,12 +39,12 @@ public class ContractServiceTest {
     ModelMapper modelMapper;
 
     @InjectMocks
-    private ContractService contractService;
+    private ContractFacade contractFacade;
     private List<NumberDto> numberList = new ArrayList<>();
     private List<ContractDto> dtoList = new ArrayList<>();
     private List<ContractEntity> entityList = new ArrayList<>();
 
-  /*  @Before
+/*    @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
 

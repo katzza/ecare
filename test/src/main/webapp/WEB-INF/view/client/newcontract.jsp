@@ -36,7 +36,7 @@
     <form:form modelAttribute="contract" method="post">
     <h1></h1>
     <h4>Client</h4>
-    <td><b>${contract.clientEmail}</b>></td>
+    <td><b>${contract.clientEmail}</b></td>
     <br><br>
     <h1></h1>
     <h5 class=" "></h5>
@@ -51,8 +51,7 @@
             </c:forEach>
         </form:select>
     </div>
-    <br><br>
-    <br><br>
+    <br><br><br>
     Choose a tariff:
     <div class="form-group">
         <label for="tr" class="form-label">Tariffs <span class="text-muted"></span></label>
@@ -66,7 +65,7 @@
 
     <br><br>
     <input type="hidden" name="contractId" value=${contract.contractId}>
-    <input type="hidden" name="clientId" value=${contract.clientId}>
+  <%--  <input type="hidden" name="clientId" value=${contract.clientId}>--%>
     <input type="submit" onclick="validate()" value="Save">
 </div>
 

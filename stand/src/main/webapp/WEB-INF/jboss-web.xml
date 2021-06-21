@@ -1,0 +1,3 @@
+<jboss-web>
+    <context-root>/stand</context-root>
+</jboss-web>

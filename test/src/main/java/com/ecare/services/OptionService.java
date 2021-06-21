@@ -1,7 +1,6 @@
 package com.ecare.services;
 
 import com.ecare.dao.OptionDAO;
-import com.ecare.dao.OptionOptionsDAO;
 import com.ecare.domain.OptionEntity;
 import com.ecare.dto.OptionDto;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -23,8 +21,6 @@ public class OptionService {
     @Autowired
     OptionDAO optionDAO;
     @Autowired
-    OptionOptionsDAO optionOptionsDAO;
-    @Autowired
     private ModelMapper modelMapper;
 
     public List<OptionDto> getAllOptions() {
@@ -34,17 +30,27 @@ public class OptionService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * this method saves new option
+     * @param optionDto from this Dto new option will be created
+     * @return Optional in case of error or Optional.empty();
+     */
     public Optional<String> saveOption(OptionDto optionDto) {
         if (optionDAO.findByName(optionDto.getOptionName()).size() > 0) {
-            log.info("Option " + optionDto.getOptionName() + " already exist");
-            return Optional.of("Option " + optionDto.getOptionName() + " already exist");
+            log.info("Option {} already exist", optionDto.getOptionName());
+            return Optional.of(String.format("Option %s already exist", optionDto.getOptionName()));
         }
         OptionEntity option = convertToEntity(optionDto);
         optionDAO.save(option);
         return Optional.empty();
     }
 
-    public Optional<String> updateOption(OptionDto optionDto) {
+    /**
+     * This method updated existed option in database
+     * @param optionDto - data for update
+     * @return Optional in case of error or Optional.empty();
+     */
+    public Optional<String> updateOption(OptionDto optionDto) { //todo: update - return object or Id, error - exception
         OptionEntity option = (OptionEntity) optionDAO.findById(optionDto.getOptionId());
         option.setOptionName(optionDto.getOptionName());
         option.setDescription(optionDto.getDescription());
@@ -56,6 +62,10 @@ public class OptionService {
         return Optional.empty();
     }
 
+    /**
+     * this method puts base options to OptionDto to show it on the form
+     * @param optionDto - in this Dto base options will be put
+     */
     public void showBaseOptions(OptionDto optionDto) {
         Map<String, Integer> mapOptions = optionDto.getBaseOptions();
         optionDAO.getBaseOptions().forEach(array -> mapOptions.put((String) array[1], (Integer) array[0]));
@@ -72,8 +82,14 @@ public class OptionService {
 
     }
 
+    /**
+     * This method gets from database main option depends on parameters
+     * @param baseOptionId - id of base option
+     * @param tariffId -id of tariff
+     * @return updated optionDto if exist, or null if not exist
+     */
     public OptionDto getMainOptionByBaseAndTariffId(int baseOptionId, int tariffId) {
-        log.info("getUniqueOptionByBaseAndTariffId(baseOptionId, tariffId) " + baseOptionId, tariffId);
+        log.info("getUniqueOptionByBaseAndTariffId(baseOptionId, tariffId) {}, {} ", +baseOptionId, tariffId);
         List<OptionEntity> option = optionDAO.getByBaseIsMultuAndTariffId(baseOptionId, false, tariffId);
         if (option.size() > 0) {
             return convertToDto(option.get(0));
@@ -83,7 +99,7 @@ public class OptionService {
     }
 
     public List<OptionDto> getMultiOptionsByBaseAndTariffId(int baseOptionId, int tariffId) {
-        log.info("getMultiOptionsByBaseAndTariffId (baseOptionId, tariffId) " + baseOptionId, tariffId);
+        log.info("getMultiOptionsByBaseAndTariffId (baseOptionId, tariffId) {}, {}", baseOptionId, tariffId);
         List<OptionEntity> options = optionDAO.getByBaseIsMultuAndTariffId(baseOptionId, true, tariffId);
         return getOptionDtos(options);
     }
@@ -94,16 +110,10 @@ public class OptionService {
     }
 
     private List<OptionDto> getOptionDtos(List<OptionEntity> options) {
-        if (options.size() > 0) {
-            List<OptionDto> optionDtos = new ArrayList<>();
-            for (OptionEntity option :
-                    options) {
-                optionDtos.add(convertToDto(option));
-            }
-            return optionDtos;
-        } else
-            log.info("return null");
-        return null;
+        return options.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+
     }
 
     private OptionDto convertToDto(OptionEntity optionEntity) {
@@ -119,4 +129,16 @@ public class OptionService {
         return modelMapper.map(optionDto, OptionEntity.class);
     }
 
+
+    public OptionDto getOptionDtoShowBaseOptions() {
+        OptionDto optionDto = new OptionDto();
+        showBaseOptions(optionDto);
+        return optionDto;
+    }
+
+    public OptionDto getOptionByIdShowBaseOptions(int optionId) {
+        OptionDto optionDto = findById(optionId);
+        showBaseOptions(optionDto);
+        return optionDto;
+    }
 }

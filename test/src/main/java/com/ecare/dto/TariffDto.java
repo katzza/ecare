@@ -42,7 +42,7 @@ public class TariffDto {
     private OptionDto internetOption;
 
     private int travelOptionId;
-    private String travelOptionNames;
+    private String travelOptionName;
     private Map<String, Integer> travelOptions = new HashMap<>();
     private OptionDto travelOption;
 

@@ -2,12 +2,10 @@ package com.ecare.services;
 
 import com.ecare.dao.ClientDAO;
 import com.ecare.dao.UserDAO;
-import com.ecare.domain.ClientEntity;
 import com.ecare.domain.UserEntity;
 import com.ecare.domain.UserRole;
 import com.ecare.dto.UserDto;
 import com.ecare.error.UserAlreadyExistException;
-import com.ecare.error.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -29,7 +26,10 @@ public class UserService {
     UserDAO userDAO;
 
     @Autowired
-    ClientDAO clientDAO;
+    ClientDAO clientDAO; //todo clientService
+
+    @Autowired
+    ClientService clientService;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -42,24 +42,25 @@ public class UserService {
     public void saveUser(UserDto user) {
         if (userDAO.findByEmail(user.getEmail()).size() > 0) {
             log.info("Account-exist test NOK: There is an account with that email address");
-            throw new UserAlreadyExistException("There is an account with that email address: "
-                    + user.getEmail());
+            throw new UserAlreadyExistException(String.format("There is an account with that email address: %s", user.getEmail()));
         } else {
             log.info("Account-exist test is OK");
             UserEntity userEntity = convertToEntity(user);
             userEntity.setRole(UserRole.ROLE_CLIENT);
             userDAO.save(userEntity);
-            ClientEntity clientEntity = new ClientEntity(userEntity);
-            clientDAO.save(clientEntity);
+            clientService.createClient(userEntity);
         }
     }
+
 
     @Transactional
     public UserDto findByEmail(String email) {
         List<UserEntity> userEntity = userDAO.findByEmail(email);
         if (userEntity.size() == 0) {
-            throw new UsernameNotFoundException("User not found by name: " + email);
-        } else return convertToDto(userEntity.get(0));
+            throw new UsernameNotFoundException(String.format("User not found by name: %s", email));
+        } else {
+            return convertToDto(userEntity.get(0));
+        }
 
     }
 
@@ -67,7 +68,7 @@ public class UserService {
         try {
             request.login(username, password);
         } catch (ServletException e) {
-            System.out.println("Error while login " + e.getMessage());
+            log.info("Error while login {}", e.getMessage());
         }
     }
 

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core"
+>
+<f:view>
+    <h:head>
+        <title>Hot tariffs</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="resources/style.css" type="text/css"/>
+    </h:head>
+    <h:body>
+        <div class="jumbotron text-center">
+            <h1>Hot tariffs from Happy Telecom </h1>
+        </div>
+
+        <h:panelGroup id="tariffs" rendered="true">
+            <div class="container">
+                <div class="row text-center">
+                    <ui:repeat value="#{webSocket.tariffs}" var="tariff">
+                        <div class="col-sm-4">
+                            <div class="panel panel-danger">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">#{tariff.name}</h3>
+                                </div>
+                                <!--       <div class="panel-heading text-center">#{tariff.name}</div>-->
+                                <div class="panel-footer">#{tariff.description}</div>
+                                <div class="panel-footer">#{tariff.price}$</div>
+                            </div>
+                        </div>
+                        <!--  <div class="card border-info" style="width: 50rem;">
+                              <ul class="list-group list-group-flush">
+                                  <li class="list-group-item"><b>#{tariff.name}</b></li>
+                                  <li class="list-group-item">#{tariff.description}</li>
+                                  <li class="list-group-item">Price: #{tariff.price}$</li>
+                              </ul>
+                          </div>-->
+                        <!--                        <div class="card mb-4 rounded-3 shadow-sm">
+                                                    <div class="card-header py-3">
+                                                        <h4 class="my-0 fw-normal">#{tariff.name}</h4>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <h1 class="card-title pricing-card-title">$#{tariff.price}<small
+                                                                class="text-muted fw-light">/mo</small></h1>
+                                                        <ul class="list-unstyled mt-3 mb-4">
+                                                            <li>#{tariff.description}</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>-->
+                    </ui:repeat>
+                </div>
+            </div>
+        </h:panelGroup>
+
+        <h:form>
+            <f:websocket channel="websocket">
+                <f:ajax event="update" render=":tariffs"/>
+            </f:websocket>
+        </h:form>
+    </h:body>
+</f:view>
+
+</html>

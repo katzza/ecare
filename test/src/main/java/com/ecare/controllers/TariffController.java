@@ -31,11 +31,7 @@ public class TariffController {
 
     @GetMapping("/newtariff")
     public String createNewTariff(Model model) {
-        TariffDto tariffDto = new TariffDto();
-        tariffService.showUniqueCallsOptions(tariffDto);
-        tariffService.showUniqueInternetOptions(tariffDto);
-        tariffService.showUniqueTravelOptions(tariffDto);
-        tariffService.showFreeOptions(tariffDto);  //todo
+        TariffDto tariffDto = tariffService.prepareNewTariff();
         model.addAttribute("tariff", tariffDto);
         return "employee/newtariff";
     }
@@ -48,19 +44,13 @@ public class TariffController {
             return "employee/newtariff";
         }
         model.addAttribute("tariffId", tariffDto.getTariffId());
-        //  model.addAttribute("tariff", tariffDto);  //dto goes to null
         return "redirect:/tariff/setmultioptions";  //take from context-menu! must be link to method, not jsp
     }
 
 
     @GetMapping("/updatetariff")
     public String updateTariff(@RequestParam("tariffId") int tariffId, Model model) {
-        TariffDto tariff = tariffService.findById(tariffId);
-
-        tariffService.showUniqueCallsOptions(tariff);
-        tariffService.showUniqueTravelOptions(tariff);
-        tariffService.showUniqueInternetOptions(tariff);
-        tariffService.showUnselectedFreeOptions(tariff);
+        TariffDto tariff = tariffService.prepareTariffForUpdate(tariffId);
         model.addAttribute("tariff", tariff);
         return "employee/updatetariff";
     }
@@ -79,10 +69,7 @@ public class TariffController {
 
     @GetMapping("/setmultioptions")
     public String setMultioptions(@RequestParam("tariffId") int tariffId, Model model) {
-        //   public String setMultioptions(@ModelAttribute("tariff") TariffDto tariffDto, Model model, HttpSession session) {
-        TariffDto tariff = tariffService.findById(tariffId);
-        tariffService.showTariffAddedUniqueOptions(tariff);
-        tariffService.showMultipleOptions(tariff);
+        TariffDto tariff = tariffService.getTariffAndShowHisOptions(tariffId);
         model.addAttribute("tariff", tariff);
         return "employee/setmultioptions";
     }

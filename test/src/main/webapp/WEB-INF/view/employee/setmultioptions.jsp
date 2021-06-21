@@ -32,7 +32,7 @@
 
     <h5 class=" "></h5>
     Your tariff has basic options selected:
-    <br>
+    <br> <br>
     <table>
         <tr>
             <td> Calls:</td>
@@ -73,22 +73,24 @@
         </tr>
     </table>
     <br>
-    If you want to choose more additional options, add the rest of the basic options to the tariff.
-    <br><br>
-    <label for="multipleoptions">Set base-depending options to tariff</label>
-    <form:select path="multipleOptionIds" multiple="multiple" id="multipleoptions">
-        <c:forEach items="${tariff.multipleOptions}" var="item">
-            <form:option label="${item.key}" value="${item.value}"/>
-        </c:forEach>
-    </form:select>
-    <br><br>
-    <form:hidden path="tariffId" value="${tariff.tariffId}"/>
-    <input type="submit" value="Save">
-    </form:form>
+    <div class="container">
+        If you want to choose more additional options, add the rest of the basic options to the tariff.
+        <br><br>
+        <label for="multipleoptions">Set base-depending options to tariff</label>
+        <form:select path="multipleOptionIds" multiple="multiple" id="multipleoptions">
+            <c:forEach items="${tariff.multipleOptions}" var="item">
+                <form:option label="${item.key}" value="${item.value}"/>
+            </c:forEach>
+        </form:select>
+        <br><br>
+        <form:hidden path="tariffId" value="${tariff.tariffId}"/>
+        <input type="submit" value="Save">
+        </form:form>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
-            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+                crossorigin="anonymous"></script>
+    </div>
 </div>
 </body>
 </html>

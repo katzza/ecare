@@ -43,12 +43,30 @@
     </c:if>
 
     <h5 class=" "></h5>
-    Name <form:input maxlength="40" required="required" path="tariffName"/>
-    <br> <br>
-    Description <form:input maxlength="100" required="required" path="tariffDescription"/>
-    <br> <br>
-    Price <form:input pattern="[0-9]{0,7}" maxlength="7" required="required" path="price"/>
-    <br> <br>
+    <div class="form-group">
+        Name
+        <form:input type="text" class="form-control" maxlength="40" required="required" path="tariffName"/>
+    </div>
+    <br>
+    <div class="form-group">
+        Description
+        <form:input type="text" class="form-control" maxlength="100" required="required" path="tariffDescription"/>
+    </div>
+    <br>
+    <div class="form-group">
+        Price <form:input type="text" class="form-control" pattern="[0-9]{0,7}" maxlength="7" required="required"
+                          path="price"/>
+        <br>
+    </div>
+        <%--    <th>Name:</th>
+            <td>${tariff.tariffName} </td>
+            <br> <br>
+            <th>Description:</th>
+            <td>${tariff.tariffDescription} </td>
+            <br> <br>
+            <th>Price:</th>
+            <td>${tariff.price} </td>
+            <br> <br>--%>
     <th>Current calls-option:</th>
     <td>${tariff.callsOption!=null?tariff.callsOption.optionName:" ---"} </td>
     <br>

@@ -27,7 +27,6 @@ import java.util.List;
                 query = "SELECT o  FROM OptionEntity o where o.baseOptionId = :base_option and o.isMulti =:is_multi and o.optionId in " +
                         "(SELECT t.optionByOptionId.optionId FROM TariffOptionsEntity t WHERE t.tariffByTariffId.tariffId = : tariff_id)"),
 
-
         //shows base-dependent and NON-base dependent too
         @NamedQuery(name = "Option.getTariffAddedMultiAndFreeOptions",
                 query = "SELECT o  FROM OptionEntity o where o.isMulti = true and o.optionId in " +
@@ -37,14 +36,12 @@ import java.util.List;
                 query = "SELECT o.optionId , o.optionName  FROM OptionEntity o where o.isMulti = true and o.baseOptionId = 0 and o.optionId NOT IN " +
                         "(SELECT t.optionByOptionId.optionId FROM TariffOptionsEntity t WHERE t.tariffByTariffId.tariffId = : tariff_id)"),
 
-        @NamedQuery(name = "Option.getUnselectedAdditionalOptions",
-                query = "SELECT o.optionId , o.optionName  FROM OptionEntity o where o.baseOptionId = 9 and o.isBase = false AND o.optionId NOT IN " +
-                        "(SELECT z.addOptionByOptionId.optionId FROM OptionOptionsEntity z WHERE z.mainOptionByOptionId.optionId = : main_option_id)"),
+        @NamedQuery(name = "Option.getNotTariffAddedMultioptions",
+                query = "SELECT o.optionId , o.optionName  FROM OptionEntity o where o.baseOptionId = :base_option and o.isMulti= true and o.optionId NOT IN " +
+                        " (SELECT t.optionByOptionId.optionId FROM TariffOptionsEntity t WHERE t.tariffByTariffId.tariffId = : tariff_id)"),
+
         @NamedQuery(name = "Option.getAllSalesOptions",
                 query = "SELECT o FROM OptionEntity o where o.isBase = false order by o.baseOptionId, o.optionName"),
-        @NamedQuery(name = "Option.getOptionsByMainOptionId",
-                query = "SELECT o FROM OptionEntity o where o.optionId IN (SELECT z.addOptionByOptionId.optionId FROM OptionOptionsEntity z WHERE z.mainOptionByOptionId.optionId = : main_option_id)"),
-
 })
 
 public class OptionEntity implements Serializable {
@@ -69,8 +66,8 @@ public class OptionEntity implements Serializable {
     @Column(name = "is_multi")
     private boolean isMulti;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "optionByOptionId")
-    private List<ContractAddedOptionsEntity> contractAddedOptionsEntities = new ArrayList<>();
+ /*   @OneToMany(fetch = FetchType.LAZY, mappedBy = "optionByOptionId")
+    private List<ContractOptionsEntity> contractAddedOptionsEntities = new ArrayList<>();*/
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "optionByOptionId")
     private List<TariffOptionsEntity> tariffOptionsEntities = new ArrayList<>();

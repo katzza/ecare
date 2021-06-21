@@ -31,7 +31,7 @@
             <div id="error">${message}</div>
         </c:if>
 
-        <h5 class=" "></h5>
+      <%--  <h5 class=" "></h5>
         Name <form:input maxlength="40" required="required" path="optionName"/>
         <br><br>
         Description <form:input maxlength="100" required="required" path="description"/>
@@ -39,7 +39,27 @@
         Month price <form:input pattern="[0-9]{0,7}" maxlength="7" required="required" path="monthPrice"/>
         <br><br>
         Connection price <form:input pattern="[0-9]{0,7}" maxlength="7" required="required" path="connectionPrice"/>
-        <br><br>
+        <br><br>--%>
+
+        <div class="form-group">
+            Name
+            <form:input type="text" class="form-control" maxlength="40" required="required" path="optionName"/>
+        </div>
+        <br>
+        <div class="form-group">
+            Description
+            <form:input type="text" class="form-control" maxlength="100" required="required" path="description"/>
+        </div>
+        <div class="form-group">
+            Month price
+            <form:input pattern="[0-9]{0,7}" maxlength="7" class="form-control" required="required" path="monthPrice"/>
+        </div>
+        <div class="form-group">
+            Connection price
+            <form:input pattern="[0-9]{0,7}" maxlength="7" class="form-control" required="required"
+                        path="connectionPrice"/>
+        </div>
+
 
         <label for="baseoption">Base option</label>
         <form:select path="baseOptionId" id="baseoption">

@@ -3,12 +3,13 @@ package com.ecare.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
+@ToString
 @Getter
 @Setter
 @Entity
@@ -19,6 +20,8 @@ import java.util.List;
                 query = "SELECT t FROM TariffEntity t where t.tariffId = :tariff_id"),
         @NamedQuery(name = "Tariff.findByName",
                 query = "SELECT t FROM TariffEntity t where t.tariffName = :tariff_name"),
+        @NamedQuery(name = "Tariff.findChampions",
+                query = "SELECT t FROM TariffEntity t WHERE UPPER(t.tariffName) LIKE '%CHAMPION'"),
         @NamedQuery(name = "Tariff.findBaseTariff",
                 query = "SELECT t FROM TariffEntity t where t.isBaseTariff = true"),
         @NamedQuery(name = "Tariff.getAllTariffs",

@@ -44,13 +44,29 @@
         <div id="error">${message}</div>
     </c:if>
 
-    <h5 class=" "></h5>
-    Name <form:input maxlength="40" required="required" path="tariffName"/>
-    <br><br>
-    Description <form:input maxlength="100" required="required" path="tariffDescription"/>
-    <br><br>
-    Price <form:input pattern="[0-9]{0,7}" maxlength="7" required="required" path="price"/>
+        <%--    <h5 class=" "></h5>
+            Name <form:input maxlength="40" required="required" path="tariffName"/>
+            <br><br>
+            Description <form:input maxlength="100" required="required" path="tariffDescription"/>
+            <br><br>
+            Price <form:input pattern="[0-9]{0,7}" maxlength="7" required="required" path="price"/>
+            <br>--%>
+    <div class="form-group">
+        Name
+        <form:input type="text" class="form-control" maxlength="40" required="required" path="tariffName"/>
+    </div>
     <br>
+    <div class="form-group">
+        Description
+        <form:input type="text" class="form-control" maxlength="100" required="required" path="tariffDescription"/>
+    </div>
+    <br>
+    <div class="form-group">
+        Price <form:input type="text" class="form-control" pattern="[0-9]{0,7}" maxlength="7" required="required"
+                          path="price"/>
+        <br>
+    </div>
+
     <br>
     <label for="callsoption">Set calls-option to tariff</label>
     <form:select path="callsOptionId" id="callsoption">

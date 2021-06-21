@@ -11,7 +11,7 @@ import javax.validation.Valid;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/option")   //todo pagination
+@RequestMapping("/option")
 public class OptionController {
 
     @Autowired
@@ -19,12 +19,11 @@ public class OptionController {
 
     @GetMapping("/newoption")
     public String createNewOption(Model model) {
-        OptionDto optionDto = new OptionDto();
-        optionService.showBaseOptions(optionDto);
-        // optionService.showAdditionalOptions(optionDto);
+        OptionDto optionDto = optionService.getOptionDtoShowBaseOptions();
         model.addAttribute("option", optionDto);
         return "employee/newoption";
     }
+
 
     @PostMapping("/newoption")
     public String createNewOption(@ModelAttribute("option") @Valid OptionDto optionDto, Model model) {
@@ -33,15 +32,12 @@ public class OptionController {
             model.addAttribute("message", error.get());
             return "employee/newoption";
         }
-        return "redirect: /employee/options";
+        return "redirect:/employee/options";
     }
 
     @GetMapping("/updateoption")
     public String updateOption(@RequestParam("optionId") int optionId, Model model) {
-        OptionDto optionDto = optionService.findById(optionId);
-        optionService.showBaseOptions(optionDto);
-        //    optionService.showAdditionalOptions(optionDto);
-        //     optionService.showOptionsOptions(optionDto);
+        OptionDto optionDto = optionService.getOptionByIdShowBaseOptions(optionId);
         model.addAttribute("option", optionDto);
         return "employee/updateoption";
     }
@@ -53,19 +49,8 @@ public class OptionController {
             model.addAttribute("message", error.get());
             return "employee/updateoption";
         }
-        model.addAttribute("message", "Option was successfully changed");
-        return "redirect: /employee/options";
+        /*  model.addAttribute("message", "Option was successfully changed");*/
+        return "redirect:/employee/options";
     }
-
-  /*  @RequestMapping("/deleteadditionaloption") //old logic
-    public String deleteAdditionalOption(@RequestParam("optionId") int optionId, @RequestParam("addoptionId") int addoptionId, Model model) {
-        OptionDto optionDto = optionService.findById(optionId);
-        optionService.deleteAdditionalOption(optionId, addoptionId);
-        optionService.showBaseOptions(optionDto);
-        optionService.showAdditionalOptions(optionDto);
-        optionService.showOptionsOptions(optionDto);
-        model.addAttribute("optionId", optionDto.getOptionId());
-        return "redirect:/option/updateoption";
-    }*/
 
 }

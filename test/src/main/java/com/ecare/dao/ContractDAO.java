@@ -13,12 +13,6 @@ public class ContractDAO extends AbstractHibernateDAO {
         setClazz(ContractEntity.class);
     }
 
-    public List<ContractEntity> getContractsByClientId(int client_id) {
-        return getCurrentSession().createNamedQuery("Contract.findByClientId", ContractEntity.class)
-                .setParameter("client_id", client_id)
-                .getResultList();
-    }
-
     public List<ContractEntity> getContractsByTariffId(int tariff_id) {
         return getCurrentSession().createNamedQuery("Contract.findByTariffId", ContractEntity.class)
                 .setParameter("tariff_id", tariff_id)

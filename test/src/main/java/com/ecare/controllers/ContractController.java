@@ -1,9 +1,8 @@
 package com.ecare.controllers;
 
-import com.ecare.dto.ClientDto;
 import com.ecare.dto.ContractDto;
 import com.ecare.services.ClientService;
-import com.ecare.services.ContractService;
+import com.ecare.services.ContractFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,45 +17,65 @@ import java.util.Optional;
 public class ContractController {
 
     @Autowired
-    ContractService contractService;
+    ContractFacade contractFacade;
     @Autowired
     private ClientService clientService;
 
     @GetMapping("/contract/newcontract")
     public String createContract(@RequestParam("clientId") int clientId, Model model) {
-        ContractDto contractDto = new ContractDto();
-        contractService.generateFreeNumbers();
-        ClientDto client = clientService.findById(clientId);
-        contractDto.setClientId(client.getClientId());
-        contractDto.setClientEmail(client.getUser().getEmail());
+        ContractDto contractDto = contractFacade.prepareNewContract(clientId);
         model.addAttribute("contract", contractDto);
-        contractService.showNumbers(contractDto);
-        contractService.showTariffandOptions(contractDto);
         return "client/newcontract";
     }
 
     @PostMapping("/contract/newcontract")
     public String createContract(@ModelAttribute("contract") ContractDto contractDto, Model model) {
-        Optional<String> error = contractService.save(contractDto);
-        if (error.isPresent()) {
-            model.addAttribute("message", error.get());
-            contractService.showTariffandOptions(contractDto);
+        try {
+            int contractId = contractFacade.save(contractDto);
+           /* model.addAttribute("contractId", contractId);
+            return "redirect:/contract/setmultioptions";*/
+            model.addAttribute("message", "New contract was successfully added");
+            model.addAttribute("client", clientService.findById(contractDto.getClientId()));
+            return "client/clientinfo";
+        } catch (Exception ex) {
+            model.addAttribute("message", ex.getMessage());
+            contractFacade.showAllTariffs(contractDto);
             return "client/newcontract";
+        }
+        //  model.addAttribute("tariffId", contractDto.getTariffId());
+
+    }
+
+/*    @GetMapping("/contract/setmultioptions")
+    public String setOptionsToContract(@RequestParam("contractId") int contractId, Model model) {
+        ContractDto contractDto = contractFacade.prepareNewContractToSetOptions(contractId);
+        model.addAttribute("contract", contractDto);
+        return "employee/addcontractoptions";
+    }*/
+
+   /* @PostMapping("/contract/setmultioptions")
+    public String setMultioptions(@ModelAttribute("contract") ContractDto contractDto, Model model) {
+        try {
+            contractFacade.saveOptionsToContract(contractDto);
+        } catch (Exception ex) {
+            model.addAttribute("message", ex.getMessage());
+            return "employee/addcontractoptions";
         }
         model.addAttribute("message", "New contract was successfully added");
         model.addAttribute("client", clientService.findById(contractDto.getClientId()));
         return "client/clientinfo";
-    }
+    }*/
+
 
     @GetMapping("/contract/editcontract")
     public String editContract(@RequestParam("contractId") int id, Model model) {
-        ContractDto contractDto = contractService.findById(id);
-        if (contractService.isBlocked(contractDto)) {
+        ContractDto contractDto = contractFacade.findById(id);
+        if (contractFacade.isBlocked(contractDto)) {
             model.addAttribute("message", "Contract " + contractDto.getPhoneNumber().getPhoneNumber() + " is blocked - it cannot be changed");
             model.addAttribute("client", clientService.findById(contractDto.getClientId()));
             return "client/clientinfo";
         }
-        contractService.showTariffandOptions(contractDto);
+        contractFacade.showAllTariffs(contractDto);
         model.addAttribute("contract", contractDto);
         model.addAttribute("client", clientService.findByPhone(contractDto.getPhoneNumber().getPhoneNumber()));
         return "client/updatecontract";
@@ -64,7 +83,7 @@ public class ContractController {
 
     @PostMapping("/contract/editcontract")
     public String editContract(@ModelAttribute("contract") ContractDto contractDto, Model model) {
-        contractService.updateContract(contractDto);
+        contractFacade.updateContract(contractDto);
         model.addAttribute("message", "Contract " + contractDto.getPhoneNumber().getPhoneNumber() + " was successfully changed");
         model.addAttribute("client", clientService.findByPhone(contractDto.getPhoneNumber().getPhoneNumber()));
         return "client/clientinfo";
