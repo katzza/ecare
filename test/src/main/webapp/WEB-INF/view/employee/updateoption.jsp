@@ -30,15 +30,36 @@
         <c:if test="${not empty message}">
             <div id="error">${message}</div>
         </c:if>
-        <h5 class=" "></h5>
-        Name <form:input maxlength="40" required="required" path="optionName"/>
-        <br><br>
-        Description <form:input maxlength="100" required="required" path="description"/>
-        <br><br>
-        Month price <form:input pattern="[0-9]{0,7}" maxlength="7" required="required" path="monthPrice"/>
-        <br><br>
-        Connection price <form:input pattern="[0-9]{0,7}" maxlength="7" required="required" path="connectionPrice"/>
-        <br><br>
+        <%--      <h5 class=" "></h5>
+              Name <form:input maxlength="40" required="required" path="optionName"/>
+              <br>
+              Description <form:input maxlength="100" required="required" path="description"/>
+              <br><br>
+              Month price <form:input pattern="[0-9]{0,7}" maxlength="7" required="required" path="monthPrice"/><br>
+
+              <br><br>
+              Connection price <form:input pattern="[0-9]{0,7}" maxlength="7" required="required" path="connectionPrice"/>
+              <br>--%>
+
+        <div class="form-group">
+            Name
+            <form:input type="text" class="form-control" maxlength="40" required="required" path="optionName"/>
+        </div>
+        <br>
+        <div class="form-group">
+            Description
+            <form:input type="text" class="form-control" maxlength="100" required="required" path="description"/>
+        </div>
+        <div class="form-group">
+            Month price
+            <form:input pattern="[0-9]{0,7}" maxlength="7" class="form-control" required="required" path="monthPrice"/>
+        </div>
+        <div class="form-group">
+            Connection price
+            <form:input pattern="[0-9]{0,7}" maxlength="7" class="form-control" required="required"
+                        path="connectionPrice"/>
+        </div>
+
         <th>Current base option</th>
         <td>${option.baseOptionName} </td>
         <br><br>

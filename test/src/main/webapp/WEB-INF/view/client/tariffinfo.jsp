@@ -24,8 +24,7 @@
     <h1></h1>
     <h4>Tariffinfo</h4>
     <h1></h1>
-<%--
-    <h5 class=" "></h5>
+<%--    <h5 class=" "></h5>
     Name <form:input readonly="true" path="tariffName"/>
     <br> <br>
     Description <form:input readonly="true" path="tariffDescription"/>
