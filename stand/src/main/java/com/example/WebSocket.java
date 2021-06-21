@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Slf4j
-@Singleton
+/*@Singleton*/
 @ApplicationScoped
 @Named
 public class WebSocket {
@@ -26,7 +26,7 @@ public class WebSocket {
     @Inject
     @Push(channel = "websocket")
     private PushContext pushContext;
-    private List<Tariff> tariffs = new CopyOnWriteArrayList<>();//Multithreading
+    private List<Tariff> tariffs = new CopyOnWriteArrayList<>();
 
     public List<Tariff> getTariffs() {
         return tariffs;
@@ -38,7 +38,7 @@ public class WebSocket {
     }
 
     public void sendMessage(String message) {
-        log.info("update tariff data");
+        log.info("send tariff data");
         pushContext.send(message);
     }
 
@@ -48,7 +48,7 @@ public class WebSocket {
             URL url = new URL(URI);
             HttpURLConnection connection = (HttpURLConnection) (url.openConnection());
             int status = connection.getResponseCode();
-            log.info("askData() response status: " + status);
+            log.info("getting data on startup, response status: " + status);
         } catch (IOException e) {
             log.warn(e.getMessage(), e);
         }

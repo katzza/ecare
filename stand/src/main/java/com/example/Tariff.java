@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.annotation.ManagedBean;
-import javax.json.bind.annotation.JsonbProperty;
 import java.io.Serializable;
 
 @Getter

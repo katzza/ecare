@@ -19,29 +19,38 @@
     <title>Tariffinfo</title>
 </head>
 <body>
-<form:form modelAttribute="tariff" >
+<form:form modelAttribute="tariff">
 <div class="container">
     <h1></h1>
     <h4>Tariffinfo</h4>
     <h1></h1>
-
+<%--
     <h5 class=" "></h5>
-    Name <form:input maxlength="40" readonly="true" path="tariffName"/>
+    Name <form:input readonly="true" path="tariffName"/>
     <br> <br>
-    Description <form:input  readonly="true" path="tariffDescription"/>
+    Description <form:input readonly="true" path="tariffDescription"/>
     <br> <br>
-    Price <form:input   readonly="true" path="price"/>
+    Price <form:input readonly="true" path="price"/>
+    <br> <br>--%>
+    <th>Name:</th>
+    <td>${tariff.tariffName} </td>
     <br> <br>
-    <th>Current calls-option:</th>
+    <th>Description:</th>
+    <td>${tariff.tariffDescription} </td>
+    <br> <br>
+    <th>Price:</th>
+    <td>${tariff.price} </td>
+    <br> <br>
+
+    <th>Calls-option:</th>
     <td>${tariff.callsOption!=null?tariff.callsOption.optionName:" ---"} </td>
-    <br>
-    <th>Current internet-option:</th>
+    <br> <br>
+    <th>Internet-option:</th>
     <td>${tariff.internetOption!=null?tariff.internetOption.optionName:" ---"} </td>
-    <br>
-    <th>Current travel-option:</th>
+    <br> <br>
+    <th>Travel-option:</th>
     <td>${tariff.travelOption!=null?tariff.travelOption.optionName:" ---"} </td>
-    <br>
-    <br>
+    <br> <br>
     <c:if test="${tariff.multipleOptionDtos.size()!=0}">
         <div>
             <th>Current multiple options in tariff:</th>
